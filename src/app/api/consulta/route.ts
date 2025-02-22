@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const { userId } = getAuth(req);
 
     const data = await req.json();
-    const { q, Datasets, Limit } = data;
+    const { q, Datasets, Limit, custom_name } = data;
 
     if (!userId) {
         return NextResponse.json(
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
         }
     })
 
-    console.log(q, Datasets, Limit);
+    console.log(q, Datasets, Limit, custom_name);
     console.log("tamanho do q: ", q.length);
 
     if (q.length == 16) {
@@ -41,9 +41,10 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        await db.consultation.create({
+        const consultationSave = await db.consultation.create({
             data: {
                 customer_Id: getUser?.id as string,
+                custom_name: custom_name as string,
                 document: q as string,
                 queryDate: new Date(consultaCpf.data.QueryDate), 
                 queryId: consultaCpf.data.QueryId as string,
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
             }
         })
         
-        return NextResponse.json(consultaCpf.data);
+        return NextResponse.json({data: consultaCpf.data, saveInDb: consultationSave});
     } else if (q.length == 19) {
         const consultaCnpj = await axios.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/empresas`, {
             q: q,
@@ -67,9 +68,10 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        await db.consultation.create({
+         const consultationSave = await db.consultation.create({
             data: {
                 customer_Id: getUser?.id as string,
+                custom_name: custom_name,
                 document: q as string,
                 queryDate: new Date(consultaCnpj.data.QueryDate), 
                 queryId: consultaCnpj.data.QueryId as string,
@@ -79,7 +81,7 @@ export async function POST(req: NextRequest) {
             }
         })
         
-        return NextResponse.json(consultaCnpj.data.Result);
+        return NextResponse.json({data: consultaCnpj.data, saveInDb: consultationSave});
     } else {
         return NextResponse.json({ error: true, message: "Erro na consulta." })
     }

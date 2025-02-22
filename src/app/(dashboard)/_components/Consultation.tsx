@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User2 } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
 
 const schema = z.object({
   title: z.string().nonempty(),
@@ -12,14 +13,14 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-type ProcessStatus = {
-  Code: number;
-  Message: string;
-};
+// type ProcessStatus = {
+//   Code: number;
+//   Message: string;
+// };
 
-type Status = {
-  processes: ProcessStatus[];
-};
+// type Status = {
+//   processes: ProcessStatus[];
+// };
 
 type LawsuitData = {
   Last30DaysLawsuits: number;
@@ -39,11 +40,17 @@ type ResultItem = {
 };
 
 type ApiResponse = {
-  Result: ResultItem[];
-  QueryId: string;
-  ElapsedMilliseconds: number;
-  QueryDate: string;
-  Status: Status;
+  data: ResultItem;
+  saveInDb: {
+        customer_Id: string;
+        custom_name: string;
+        document: string;
+        queryDate: Date | string; 
+        queryId: string
+        type_consultation: string;
+        result: string;
+        id: string;
+  }
 };
 
 export const Consultation = () => {
@@ -67,11 +74,12 @@ export const Consultation = () => {
           q: `doc{${data.cpfCnpj}}`,
           Datasets: "processes.limit(10)",
           Limit: 1,
+          custom_name: data.title
         }),
       });
       const result: ApiResponse = await response.json();
+      console.log(result.saveInDb);
       setConsultation(result);
-      console.log(result);
     } catch (e) {
       console.error("Erro ao buscar dados:", e);
     } finally {
@@ -101,6 +109,10 @@ export const Consultation = () => {
         <button type="submit" className="mt-7 bg-blue-500 text-white p-2 rounded-md flex items-center justify-center" disabled={loading}>
           {loading ? <span className="animate-spin h-5 w-5 mr-3 border-t-2 border-white rounded-full" /> : "Consultar"}
         </button>
+
+        {consultation && (
+          <Link href={`/lista-consultas/${consultation.saveInDb.id}`}>Clique aqui pra visualizar a consulta. /lista-consultas/{consultation.saveInDb.id}</Link>
+        )}
       </form>
     </div>
   );

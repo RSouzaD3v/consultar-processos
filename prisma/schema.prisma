@@ -26,6 +26,7 @@ model User {
 
 model Consultation {
   id String @id @default(cuid())
+  custom_name String
   queryId String
   queryDate DateTime
   document String
