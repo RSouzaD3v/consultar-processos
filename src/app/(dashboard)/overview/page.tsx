@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { menuItems } from "../_components/Sidebar";
+import { menuItems } from "../_components/menuItems";
 
 export default function OverviewPage() { 
     const overviewItems = menuItems.filter((item) => item.description !== null);
