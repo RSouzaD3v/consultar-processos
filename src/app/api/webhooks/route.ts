@@ -64,15 +64,6 @@ export async function POST(req: Request) {
             email: evt.data.email_addresses[0].email_address,
             clerkId: evt.data.id,
             accountType: "user",
-            subscriptions: {
-              create: {
-                plan: "free",
-                status: "active",
-                startDate: today.toISOString(),
-                endDate: endDate.toISOString(),
-                type: "test",           
-              }
-            }
         }
     });
 
