@@ -1,9 +1,9 @@
-import { CardSubscription } from "@/components/card-subscription";
+import Header from "@/components/Header";
 
 export default function Home() {
   return (
     <div>
-      <CardSubscription />
+      <Header />
     </div>
   );
 }

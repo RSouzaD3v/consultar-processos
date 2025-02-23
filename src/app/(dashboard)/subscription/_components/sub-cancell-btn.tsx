@@ -12,7 +12,7 @@ export function CancelSubBtn() {
             const data = await response.json();
 
             console.log(data);
-            router.push("/checkout");
+            router.refresh();
         } catch (e) {
             console.log(e)
         }

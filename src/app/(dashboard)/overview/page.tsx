@@ -1,7 +1,14 @@
 import Link from "next/link";
-import { menuItems } from "../_components/menuItems";
+import { Home, User2, CreditCard, History, SearchSlash } from "lucide-react";
 
 export default function OverviewPage() { 
+    const menuItems = [
+        { name: "Overview", icon: Home, href: "/overview", description: null },
+        { name: "Consultar", icon: User2, href: "/", description: "Aqui você poderá consultar processos de pessoas físicas e juridicas" },
+        { name: "Assinaturas", icon: CreditCard, href: "/", description: "Verificar sua assinatura" },
+        { name: "His. de consultas", icon: History, href: "/", description: "Verificar consultas que já foram feitas." },
+        { name: "Lista de consultas", icon: SearchSlash, href: "/", description: "Verificar consultas que já foram feitas." },
+    ];
     const overviewItems = menuItems.filter((item) => item.description !== null);
     
     return (

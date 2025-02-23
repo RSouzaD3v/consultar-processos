@@ -21,18 +21,4 @@ model User {
   accountType String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  consultations Consultation[]
-}
-
-model Consultation {
-  id String @id @default(cuid())
-  custom_name String
-  queryId String
-  queryDate DateTime
-  document String
-  customer_Id String
-  type_consultation String
-  result Json?
-  user User @relation(fields: [userId], references: [id])
-  userId String 
 }
