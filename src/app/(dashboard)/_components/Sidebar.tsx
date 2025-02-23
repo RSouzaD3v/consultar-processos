@@ -3,16 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Home, User2, CreditCard, History, SearchSlash } from "lucide-react";
+import { Home, SearchIcon } from "lucide-react";
+
+export const menuItems = [
+    { name: "Overview", icon: Home, href: "/overview", description: null },
+    { name: "Consultar", icon: SearchIcon, href: "/consultation", description: "Aqui você poderá consultar processos de pessoas físicas e jurídicas" },
+];
 
 export const Sidebar = () => {
-    const menuItems = [
-        { name: "Overview", icon: Home, href: "/overview", description: null },
-        { name: "Consultar", icon: User2, href: "/consultar", description: "Aqui você poderá consultar processos de pessoas físicas e jurídicas" },
-        { name: "Assinaturas", icon: CreditCard, href: "/subscription", description: "Verificar sua assinatura" },
-        { name: "His. de consultas", icon: History, href: "/history-consultations", description: "Verificar consultas que já foram feitas." },
-        { name: "Lista de consultas", icon: SearchSlash, href: "/lista-de-consultas", description: "Verificar consultas que já foram feitas." },
-    ];
 
     const pathname = usePathname();
 
