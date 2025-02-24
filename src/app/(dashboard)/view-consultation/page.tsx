@@ -62,7 +62,7 @@ export default function ViewConsultation() {
         <div className="ml-[50px] md:ml-[200px]">
             <div className="w-full md:p-10 p-3 flex items-center justify-center md:gap-10 gap-4 flex-wrap">
                 <div className="w-full md:w-[350px] p-5 bg-blue-950/50 text-white rounded-md">
-                    <h5 className="text-gray-600">Consultas Realizadas</h5>
+                    <h5 className="text-gray-600">Consultas Encontradas</h5>
                     <h1 className="text-4xl font-bold">{consultations.length}</h1>
                 </div>
                 <div className="w-full md:w-[350px] p-5 bg-blue-950/50 text-white rounded-md">
@@ -84,7 +84,7 @@ export default function ViewConsultation() {
                     placeholder="Pesquisar consulta..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full p-2 border rounded-md mb-4"
+                    className="w-full p-2 border rounded-md mb-4 text-black"
                 />
 
                 {/* Botão de alternância de ordem */}
@@ -109,7 +109,8 @@ export default function ViewConsultation() {
                     {consultations.length > 0 ? (
                         consultations.map((consultation) => (
                             <Link href={`view-consultation/${consultation.id}`} key={consultation.id} >
-                                <li className="bg-white/5 hover:bg-white/10 mt-2 shadow-md p-2 rounded-md flex items-center justify-between">
+                                <li className="bg-white/5 hover:bg-white/10 mt-2 shadow-md p-2 rounded-md 
+                                flex sm:items-center sm:justify-between sm:flex-row flex-col items-start">
                                     <div>
                                         <h2 className="text-lg font-semibold">{consultation.custom_name}</h2>
                                         <p className="text-gray-500">Criado em: {new Date(consultation.createdAt).toLocaleDateString()}</p>
@@ -119,7 +120,7 @@ export default function ViewConsultation() {
                                         <p className="text-white/20">{consultation.document}</p>
                                     </div>
                                     <div>
-                                        <div className="bg-blue-500/10 text-white p-2 rounded-md">
+                                        <div className="bg-blue-500/10 my-2 sm:my-0 text-white p-2 rounded-md">
                                             <Folder />
                                         </div>
                                     </div>

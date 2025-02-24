@@ -111,8 +111,8 @@ export const ViewBussiness = ({ dataJson }: { dataJson: DataJsonTypes[] }) => {
                     {dataJson[0].Lawsuits.Lawsuits.length > 0 ? (
                         <div>
                             {dataJson[0].Lawsuits.Lawsuits.map((val, i) => (
-                                <div className="flex items-center justify-between p-3 bg-white/5 my-3" key={i}>
-                                    <div className="text-sm">
+                                <div className="flex sm:items-center sm:flex-row flex-col items-start sm:justify-between p-3 bg-white/5 my-3" key={i}>
+                                    <div className="text-sm text-left opacity-50">
                                         <h1>{val.LastUpdate}</h1>
                                         <h1>Ultima atualização</h1>
                                     </div>
@@ -121,7 +121,7 @@ export const ViewBussiness = ({ dataJson }: { dataJson: DataJsonTypes[] }) => {
                                         <h1 className="text-sm text-white/20">{val.Number}</h1>
                                     </div>
                                     <div>
-                                        <div className="bg-blue-500/10 text-white p-2 rounded-md">
+                                        <div className="bg-blue-500/10 my-2 sm:my-0 text-white p-2 rounded-md">
                                             <Folder />
                                         </div>
                                     </div>

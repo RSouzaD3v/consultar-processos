@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
                 })
             ]);
 
-            await db.consultation.create({
+            const save = await db.consultation.create({
                 data: {
                     custom_name: custom_name,
                     queryDate: personConsultation.data.QueryDate,
@@ -75,7 +75,8 @@ export async function POST(req: NextRequest) {
 
             responseData = {
                 personConsultation: personConsultation.data,
-                personBasicData: personBasicData.data
+                personBasicData: personBasicData.data,
+                saveInDb: save
             };
 
         } else if (doc.length === 14) {
@@ -103,7 +104,7 @@ export async function POST(req: NextRequest) {
                 })
             ]);
 
-            await db.consultation.create({
+            const save = await db.consultation.create({
                 data: {
                     custom_name: custom_name,
                     queryDate: consultationBusiness.data.QueryDate,
@@ -117,7 +118,8 @@ export async function POST(req: NextRequest) {
 
             responseData = {
                 consultationBusiness: consultationBusiness.data,
-                basicDataBusiness: basicDataBusiness.data
+                basicDataBusiness: basicDataBusiness.data,
+                saveInDb: save
             };
 
         } else {
