@@ -64,36 +64,38 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
             <hr />
             {dataReceive && (
                 <div>
-                    <div className="grid grid-cols-4 gap-2 rounded-md grid-rows-2">
-                        <div className="bg-blue-950/50 text-white p-2 rounded-md">
-                            <h1>Total Processos:</h1>
-                            <h1>{dataReceive.Lawsuits.TotalLawsuits}</h1>
+                    {data && (
+                        <div className="grid grid-cols-4 gap-2 rounded-md grid-rows-2">
+                            <div className="bg-blue-950/50 text-white p-2 rounded-md">
+                                <h1>Total Processos:</h1>
+                                <h1>{data.Lawsuits.TotalLawsuits}</h1>
+                            </div>
+                            <div className="bg-blue-950/50 text-white p-2 rounded-md">
+                                <h1>Processos como Autor:</h1>
+                                <h1>{data.Lawsuits.TotalLawsuitsAsAuthor}</h1>
+                            </div>
+                            <div className="bg-blue-950/50 text-white p-2 rounded-md">
+                                <h1>Processos como Defensor:</h1>
+                                <h1>{data.Lawsuits.TotalLawsuitsAsDefendant}</h1>
+                            </div>
+                            <div className="bg-blue-950/50 text-white p-2 rounded-md">
+                                <h1>Últimos 180 dias:</h1>
+                                <h1>{data.Lawsuits.Last180DaysLawsuits}</h1>
+                            </div>
+                            <div className="bg-blue-950/50 text-white p-2 rounded-md">
+                                <h1>Últimos 30 dias:</h1>
+                                <h1>{data.Lawsuits.Last30DaysLawsuits}</h1>
+                            </div>
+                            <div className="bg-blue-950/50 text-white p-2 rounded-md">
+                                <h1>Últimos 365 dias:</h1>
+                                <h1>{data.Lawsuits.Last365DaysLawsuits}</h1>
+                            </div>
+                            <div className="bg-blue-950/50 text-white p-2 rounded-md">
+                                <h1>Últimos 90 dias:</h1>
+                                <h1>{data.Lawsuits.Last90DaysLawsuits}</h1>
+                            </div>
                         </div>
-                        <div className="bg-blue-950/50 text-white p-2 rounded-md">
-                            <h1>Processos como Autor:</h1>
-                            <h1>{dataReceive.Lawsuits.TotalLawsuitsAsAuthor}</h1>
-                        </div>
-                        <div className="bg-blue-950/50 text-white p-2 rounded-md">
-                            <h1>Processos como Defensor:</h1>
-                            <h1>{dataReceive.Lawsuits.TotalLawsuitsAsDefendant}</h1>
-                        </div>
-                        <div className="bg-blue-950/50 text-white p-2 rounded-md">
-                            <h1>Últimos 180 dias:</h1>
-                            <h1>{dataReceive.Lawsuits.Last180DaysLawsuits}</h1>
-                        </div>
-                        <div className="bg-blue-950/50 text-white p-2 rounded-md">
-                            <h1>Últimos 30 dias:</h1>
-                            <h1>{dataReceive.Lawsuits.Last30DaysLawsuits}</h1>
-                        </div>
-                        <div className="bg-blue-950/50 text-white p-2 rounded-md">
-                            <h1>Últimos 365 dias:</h1>
-                            <h1>{dataReceive.Lawsuits.Last365DaysLawsuits}</h1>
-                        </div>
-                        <div className="bg-blue-950/50 text-white p-2 rounded-md">
-                            <h1>Últimos 90 dias:</h1>
-                            <h1>{dataReceive.Lawsuits.Last90DaysLawsuits}</h1>
-                        </div>
-                    </div>
+                    )}
 
                     <div>
                         {dataReceive.Lawsuits.Lawsuits.map((val, i) => (
