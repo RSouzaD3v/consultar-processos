@@ -37,13 +37,15 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
         doc.setFont("helvetica", "bold");
         doc.text("Relatório de Consultas", 10, 10);
         doc.setFont("helvetica", "normal");
-        doc.text(`Total Processos: ${dataReceive.Lawsuits.TotalLawsuits}`, 10, 20);
-        doc.text(`Processos como Autor: ${dataReceive.Lawsuits.TotalLawsuitsAsAuthor}`, 10, 30);
-        doc.text(`Processos como Defensor: ${dataReceive.Lawsuits.TotalLawsuitsAsDefendant}`, 10, 40);
-        doc.text(`Últimos 180 dias: ${dataReceive.Lawsuits.Last180DaysLawsuits}`, 10, 50);
-        doc.text(`Últimos 30 dias: ${dataReceive.Lawsuits.Last30DaysLawsuits}`, 10, 60);
-        doc.text(`Últimos 365 dias: ${dataReceive.Lawsuits.Last365DaysLawsuits}`, 10, 70);
-        doc.text(`Últimos 90 dias: ${dataReceive.Lawsuits.Last90DaysLawsuits}`, 10, 80);
+        if(data) {
+            doc.text(`Total Processos: ${data.Lawsuits.TotalLawsuits}`, 10, 20);
+            doc.text(`Processos como Autor: ${data.Lawsuits.TotalLawsuitsAsAuthor}`, 10, 30);
+            doc.text(`Processos como Defensor: ${data.Lawsuits.TotalLawsuitsAsDefendant}`, 10, 40);
+            doc.text(`Últimos 180 dias: ${data.Lawsuits.Last180DaysLawsuits}`, 10, 50);
+            doc.text(`Últimos 30 dias: ${data.Lawsuits.Last30DaysLawsuits}`, 10, 60);
+            doc.text(`Últimos 365 dias: ${data.Lawsuits.Last365DaysLawsuits}`, 10, 70);
+            doc.text(`Últimos 90 dias: ${data.Lawsuits.Last90DaysLawsuits}`, 10, 80);
+        }
 
         doc.text("Os 10 processos da página:", 10, 100);
         dataReceive.Lawsuits.Lawsuits.forEach((val, i) => {
