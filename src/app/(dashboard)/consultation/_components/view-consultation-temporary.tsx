@@ -65,7 +65,7 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
             {dataReceive && (
                 <div>
                     {data && (
-                        <div className="grid grid-cols-4 gap-2 rounded-md grid-rows-2">
+                        <div className="grid md:grid-cols-4 md:grid-rows-2 gap-5">
                             <div className="bg-blue-950/50 text-white p-2 rounded-md">
                                 <h1>Total Processos:</h1>
                                 <h1>{data.Lawsuits.TotalLawsuits}</h1>
@@ -99,13 +99,13 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
 
                     <div>
                         {dataReceive.Lawsuits.Lawsuits.map((val, i) => (
-                            <div key={i} className="flex bg-blue-950/50 p-5 rounded-md text-white my-2 items-center justify-between">
+                            <div key={i} className="flex sm:items-center sm:flex-row flex-col items-start sm:justify-between p-3 my-3 bg-blue-950/50">
                                 <div>
                                     <h1 className="font-bold">{val.LastUpdate}</h1>
                                     <h4 className="text-white/50">Última Atualização</h4>
                                 </div>
 
-                                <div className="max-w-[350px]">
+                                <div className="sm:w-[400px] my-2">
                                     <h1>{val.MainSubject}</h1>
                                     <h4>{val.Number}</h4>
                                 </div>
