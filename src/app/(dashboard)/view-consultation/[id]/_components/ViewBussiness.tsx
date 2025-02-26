@@ -1,6 +1,6 @@
 import { Folder } from "lucide-react";
 
-interface LawsuitsTypes {
+export interface LawsuitsTypes {
     AverageNumberOfUpdatesPerMonth: number;
     CaptureDate: string;
     CloseDate: string;
@@ -41,7 +41,7 @@ interface LawsuitsTypes {
     Value: number;
 }
 
-interface ProcessesTypes {
+export interface ProcessesTypes {
     FirstLawsuitDate: string;
     Last30DaysLawsuits: number;
     Last90DaysLawsuits: number;
@@ -56,7 +56,7 @@ interface ProcessesTypes {
     TotalLawsuitsAsOther: number;
 }
 
-interface DataJsonTypes {
+export interface DataJsonTypes {
     MatchKeys: string;
     Lawsuits: ProcessesTypes;
 }

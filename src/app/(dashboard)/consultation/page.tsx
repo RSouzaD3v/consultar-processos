@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SearchCheck, ScreenShareIcon } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { ViewConsultationTemporary } from "./_components/view-consultation-temporary";
+import { DataJsonTypes } from "../view-consultation/[id]/_components/ViewBussiness";
 
 const schema = z.object({
   custom_name: z.string().nonempty("O nome não pode estar vazio"),
@@ -21,6 +23,7 @@ export default function ConsultationPage() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
   const [ loading, setLoading ] = useState<boolean>(false);
   const [ idSaved, setIdSaved ] = useState<string | null>(null);
+  const [ data, setData ] = useState<DataJsonTypes | null>(null);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -32,7 +35,8 @@ export default function ConsultationPage() {
       });
 
       const result = await response.json();
-      console.log(result);
+      console.log(result.consultationBusiness.Result[0]);
+      setData(result.consultationBusiness.Result[0]);
       setIdSaved(result.saveInDb.id);
     } catch (e) {
       console.log(e);
@@ -76,7 +80,11 @@ export default function ConsultationPage() {
             )}
           </div>
         </form>
+
       </div>
+      {data && (
+        <ViewConsultationTemporary data={data} />
+      )}
     </div>
   );
 }

@@ -22,7 +22,5 @@ export const fetchSubscriptionByEmail = async (email: string) => {
         return null;
     }
 
-    console.log(subscription.data);
-
     return {isActive: subscription.data[0]?.status, data: subscription.data[0]};
 }
