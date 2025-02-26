@@ -5,8 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SearchCheck, ScreenShareIcon } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-import { ViewConsultationTemporary } from "./_components/view-consultation-temporary";
+import { ViewConsultationTemporary } from "./_components/view-consultation-temporary-bussiness";
+import { ViewConsultationTemporaryPerson } from "./_components/view-consultation-temporary-person";
 import { DataJsonTypes } from "../view-consultation/[id]/_components/ViewBussiness";
+import { DataJsonTypesPerson } from "./_components/view-consultation-temporary-person";
 
 const schema = z.object({
   custom_name: z.string().nonempty("O nome não pode estar vazio"),
@@ -24,25 +26,57 @@ export default function ConsultationPage() {
   const [ loading, setLoading ] = useState<boolean>(false);
   const [ idSaved, setIdSaved ] = useState<string | null>(null);
   const [ data, setData ] = useState<DataJsonTypes | null>(null);
+  const [ dataPerson, setDataPerson ] = useState<DataJsonTypesPerson | null>(null);
 
   const onSubmit = async (data: FormData) => {
-    try {
-      setLoading(true);
-      const response = await fetch("/api/consultation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+    if (data.doc.length === 14) {
+      const handleBussiness = async () => {
+        try {
+          setLoading(true);
+          const response = await fetch("/api/consultation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+    
+          const result = await response.json();
+          console.log(result.consultationBusiness.Result[0]);
+          setData(result.consultationBusiness.Result[0]);
+          setIdSaved(result.saveInDb.id);
+        } catch (e) {
+          console.log(e);
+          setLoading(false);
+        } finally {
+          setLoading(false);
+        }
+      }
 
-      const result = await response.json();
-      console.log(result.consultationBusiness.Result[0]);
-      setData(result.consultationBusiness.Result[0]);
-      setIdSaved(result.saveInDb.id);
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
-    } finally {
-      setLoading(false);
+      handleBussiness();
+    } else if (data.doc.length === 11) {
+      const handlePeople = async () => {
+        try {
+          setLoading(true);
+          const response = await fetch("/api/consultation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+    
+          const result = await response.json();
+          console.log(result.personConsultation.Result[0]);
+          setDataPerson(result.personConsultation.Result[0]);
+          setIdSaved(result.saveInDb.id);
+        } catch (e) {
+          console.log(e);
+          setLoading(false);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      handlePeople();
+    } else {
+      console.log("Precisa ter no min. 11 digitos, e no máximo 14 digitos.");
     }
   };
 
@@ -82,8 +116,13 @@ export default function ConsultationPage() {
         </form>
 
       </div>
+
       {data && (
         <ViewConsultationTemporary data={data} />
+      )}
+
+      {dataPerson && (
+        <ViewConsultationTemporaryPerson data={dataPerson} />
       )}
     </div>
   );
