@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { jsPDF } from "jspdf";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import { LawsuitsTypes } from "../../view-consultation/[id]/_components/ViewBussiness";
 
 interface ProcessesTypes {
@@ -82,6 +84,23 @@ export const ViewConsultationTemporaryPerson = ({ data }: { data: DataJsonTypesP
         doc.save("relatorio-consulta.pdf");
     };
 
+        const handleDownloadExcel = () => {
+            if (!dataReceive) return;
+            const dataForExcel = dataReceive.Processes.Lawsuits.map((val) => ({
+                "Nº Processo": val.Number || 0,
+                "Assunto Principal": val.MainSubject || "Nenhum",
+                "Status": val.Status || "None",
+                "Última Atualização": val.LastUpdate || "None",
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Consultas");
+            const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+            const data = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8" });
+            saveAs(data, "relatorio-consulta.xlsx");
+        };
+
     return (
         <section>
             <hr className="my-5"/>
@@ -158,6 +177,12 @@ export const ViewConsultationTemporaryPerson = ({ data }: { data: DataJsonTypesP
                             className="bg-green-500 p-2 rounded-md text-white"
                         >
                             Baixar PDF
+                        </button>
+                        <button
+                            onClick={handleDownloadExcel}
+                            className="bg-yellow-500 p-2 rounded-md text-white"
+                        >
+                            Baixar Excel
                         </button>
                     </div>
                 </div>

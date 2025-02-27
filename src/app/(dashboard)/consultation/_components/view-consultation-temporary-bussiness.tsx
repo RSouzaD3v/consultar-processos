@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { jsPDF } from "jspdf";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import { DataJsonTypes } from "../../view-consultation/[id]/_components/ViewBussiness";
 
 export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null }) => {
@@ -57,6 +59,22 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
         });
 
         doc.save("relatorio-consulta.pdf");
+    };
+
+    const handleDownloadExcel = () => {
+        if (!dataReceive) return;
+        const dataForExcel = dataReceive.Lawsuits.Lawsuits.map((val) => ({
+            "Nº Processo": val.Number,
+            "Assunto Principal": val.MainSubject,
+            "Status": val.Status,
+            "Última Atualização": val.LastUpdate,
+        }));
+        const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Consultas");
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8" });
+        saveAs(data, "relatorio-consulta.xlsx");
     };
 
     return (
@@ -132,6 +150,13 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
                             className="bg-green-500 p-2 rounded-md text-white"
                         >
                             Baixar PDF
+                        </button>
+
+                        <button
+                            onClick={handleDownloadExcel}
+                            className="bg-yellow-500 p-2 rounded-md text-white"
+                        >
+                            Baixar Excel
                         </button>
                     </div>
                 </div>
