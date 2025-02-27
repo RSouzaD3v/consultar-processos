@@ -84,7 +84,7 @@ export const ViewConsultationTemporaryPerson = ({ data }: { data: DataJsonTypesP
 
     return (
         <section>
-            <hr />
+            <hr className="my-5"/>
             {dataReceive && (
                 <div>
                     {data && (

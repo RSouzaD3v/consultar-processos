@@ -1,6 +1,7 @@
 import { Container } from "@/components/Container";
 import Header from "@/components/Header";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -29,8 +30,12 @@ export default function Home() {
           </p>
 
           <div className="flex items-center gap-2 mt-5">
-            <button className="bg-blue-500 rounded-md p-3 px-5 border border-white hover:bg-blue-600">Começar</button>
-            <button className="rounded-md p-3 px-5 border border-white/50 hover:bg-blue-500">Saiba Mais</button>
+            <Link href={"/overview"}>
+              <button className="bg-blue-500 rounded-md p-3 px-5 border border-white hover:bg-blue-600">Começar</button>
+            </Link>
+            <Link href={"/overview"}>
+             <button className="rounded-md p-3 px-5 border border-white/50 hover:bg-blue-500">Saiba Mais</button>
+            </Link>
           </div>
         </Container>
       </main>
