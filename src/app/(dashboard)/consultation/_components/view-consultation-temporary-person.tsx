@@ -54,52 +54,101 @@ export const ViewConsultationTemporaryPerson = ({ data }: { data: DataJsonTypesP
     // Função para gerar e baixar o PDF
     const handleDownloadPDF = () => {
         if (!dataReceive) return;
-
+    
         const doc = new jsPDF();
+        const pageWidth = doc.internal.pageSize.getWidth(); // Largura da página
+        const pageHeight = doc.internal.pageSize.getHeight(); // Altura da página
+        const marginLeft = 10;
+        const maxWidth = pageWidth - 20; // Define a largura máxima do texto
+        let y = 10; // Posição vertical inicial
+        const safetyMargin = 30; // Margem de segurança antes de pular de página
+    
+        const checkPageBreak = (requiredSpace: number) => {
+            if (y + requiredSpace > pageHeight - safetyMargin) {
+                doc.addPage();
+                y = 10; // Reinicia a posição no topo da nova página
+            }
+        };
+    
         doc.setFont("helvetica", "bold");
-        doc.text("Relatório de Consultas", 10, 10);
+        doc.text("Relatório de Consultas", marginLeft, y);
+        y += 10;
         doc.setFont("helvetica", "normal");
-        if(data) {
-            doc.text(`Total Processos: ${data.Processes.TotalLawsuits}`, 10, 20);
-            doc.text(`Processos como Autor: ${data.Processes.TotalLawsuitsAsAuthor}`, 10, 30);
-            doc.text(`Processos como Defensor: ${data.Processes.TotalLawsuitsAsDefendant}`, 10, 40);
-            doc.text(`Últimos 180 dias: ${data.Processes.Last180DaysLawsuits}`, 10, 50);
-            doc.text(`Últimos 30 dias: ${data.Processes.Last30DaysLawsuits}`, 10, 60);
-            doc.text(`Últimos 365 dias: ${data.Processes.Last365DaysLawsuits}`, 10, 70);
-            doc.text(`Últimos 90 dias: ${data.Processes.Last90DaysLawsuits}`, 10, 80);
-        }
-
-        doc.text("Os 10 processos da página:", 10, 100);
-        if(dataReceive.Processes.Lawsuits.length > 0 ){
-            dataReceive.Processes.Lawsuits.forEach((val, i) => {
-                const y = 110 + i * 10;
-                if (y > 270) {
-                    doc.addPage();
-                }
-                doc.text(`${i + 1}. ${val.Number} - ${val.MainSubject} (${val.Status})`, 10, y);
+    
+        if (data) {
+            const infoTexts = [
+                `Total Processos: ${data.Processes.TotalLawsuits}`,
+                `Processos como Autor: ${data.Processes.TotalLawsuitsAsAuthor}`,
+                `Processos como Defensor: ${data.Processes.TotalLawsuitsAsDefendant}`,
+                `Últimos 180 dias: ${data.Processes.Last180DaysLawsuits}`,
+                `Últimos 30 dias: ${data.Processes.Last30DaysLawsuits}`,
+                `Últimos 365 dias: ${data.Processes.Last365DaysLawsuits}`,
+                `Últimos 90 dias: ${data.Processes.Last90DaysLawsuits}`
+            ];
+    
+            infoTexts.forEach(text => {
+                checkPageBreak(10); // Garante que há espaço antes de escrever
+                doc.text(text, marginLeft, y);
+                y += 10;
             });
-        } else {
-            doc.text("Não contém lista.", 10, 110 + 1 * 10)
         }
+    
+        checkPageBreak(10);
+        doc.text("Os processos da página:", marginLeft, y);
+        y += 10;
+    
+        dataReceive.Processes.Lawsuits.forEach((val, i) => {
+            checkPageBreak(50); // Verifica se há espaço para o bloco do processo
+    
+            doc.setFont("helvetica", "bold");
+            doc.text(`${i + 1}. ${val.Number}`, marginLeft, y);
+            y += 8;
+            doc.setFont("helvetica", "normal");
+    
+            const processData = [
+                { label: "Assunto", value: val.MainSubject },
+                { label: "Status", value: `(${val.Status})` },
+                { label: "Nome do Tribunal", value: val.CourtName },
+                { label: "Tipo de Tribunal", value: val.CourtType },
+                { label: "Nível do Tribunal", value: val.CourtLevel },
+                { label: "Corpo Julgador", value: val.JudgingBody },
+                { label: "Estado", value: val.State }
+            ];
+    
+            processData.forEach(({ label, value }) => {
+                const lines = doc.splitTextToSize(`${label}: ${value}`, maxWidth);
+                checkPageBreak(lines.length * 6); // Checa antes de adicionar cada item
+                doc.text(lines, marginLeft + 10, y);
+                y += lines.length * 6;
+            });
+    
+            y += 5; // Espaço extra entre registros
+        });
+    
         doc.save("relatorio-consulta.pdf");
     };
+    
 
-        const handleDownloadExcel = () => {
-            if (!dataReceive) return;
-            const dataForExcel = dataReceive.Processes.Lawsuits.map((val) => ({
-                "Nº Processo": val.Number || 0,
-                "Assunto Principal": val.MainSubject || "Nenhum",
-                "Status": val.Status || "None",
-                "Última Atualização": val.LastUpdate || "None",
-            }));
-
-            const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Consultas");
-            const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-            const data = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8" });
-            saveAs(data, "relatorio-consulta.xlsx");
-        };
+    const handleDownloadExcel = () => {
+        if (!dataReceive) return;
+        const dataForExcel = dataReceive.Processes.Lawsuits.map((val) => ({
+            "Nº Processo": val.Number,
+            "Assunto Principal": val.MainSubject,
+            "Status": val.Status,
+            "Última Atualização": val.LastUpdate,
+            "Nome do tribunal": val.CourtName,
+            "Tipo do tribunal": val.CourtType,
+            "Nível do tribunal": val.CourtLevel,
+            "Corpo Julgador": val.JudgingBody,
+            "Estado": val.State,
+        }));
+        const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Consultas");
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8" });
+        saveAs(data, "relatorio-consulta.xlsx");
+    };
 
     return (
         <section>

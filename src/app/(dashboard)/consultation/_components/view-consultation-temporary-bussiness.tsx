@@ -37,9 +37,18 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
     
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth(); // Largura da página
+        const pageHeight = doc.internal.pageSize.getHeight(); // Altura da página
         const marginLeft = 10;
-        const maxWidth = pageWidth - 20; // Define a largura máxima do texto para evitar corte
+        const maxWidth = pageWidth - 20; // Define a largura máxima do texto
         let y = 10; // Posição vertical inicial
+        const safetyMargin = 30; // Margem de segurança antes de pular de página
+    
+        const checkPageBreak = (requiredSpace: number) => {
+            if (y + requiredSpace > pageHeight - safetyMargin) {
+                doc.addPage();
+                y = 10; // Reinicia a posição no topo da nova página
+            }
+        };
     
         doc.setFont("helvetica", "bold");
         doc.text("Relatório de Consultas", marginLeft, y);
@@ -47,69 +56,58 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
         doc.setFont("helvetica", "normal");
     
         if (data) {
-            doc.text(`Total Processos: ${data.Lawsuits.TotalLawsuits}`, marginLeft, y);
-            y += 10;
-            doc.text(`Processos como Autor: ${data.Lawsuits.TotalLawsuitsAsAuthor}`, marginLeft, y);
-            y += 10;
-            doc.text(`Processos como Defensor: ${data.Lawsuits.TotalLawsuitsAsDefendant}`, marginLeft, y);
-            y += 10;
-            doc.text(`Últimos 180 dias: ${data.Lawsuits.Last180DaysLawsuits}`, marginLeft, y);
-            y += 10;
-            doc.text(`Últimos 30 dias: ${data.Lawsuits.Last30DaysLawsuits}`, marginLeft, y);
-            y += 10;
-            doc.text(`Últimos 365 dias: ${data.Lawsuits.Last365DaysLawsuits}`, marginLeft, y);
-            y += 10;
-            doc.text(`Últimos 90 dias: ${data.Lawsuits.Last90DaysLawsuits}`, marginLeft, y);
-            y += 10;
+            const infoTexts = [
+                `Total Processos: ${data.Lawsuits.TotalLawsuits}`,
+                `Processos como Autor: ${data.Lawsuits.TotalLawsuitsAsAuthor}`,
+                `Processos como Defensor: ${data.Lawsuits.TotalLawsuitsAsDefendant}`,
+                `Últimos 180 dias: ${data.Lawsuits.Last180DaysLawsuits}`,
+                `Últimos 30 dias: ${data.Lawsuits.Last30DaysLawsuits}`,
+                `Últimos 365 dias: ${data.Lawsuits.Last365DaysLawsuits}`,
+                `Últimos 90 dias: ${data.Lawsuits.Last90DaysLawsuits}`
+            ];
+    
+            infoTexts.forEach(text => {
+                checkPageBreak(10); // Garante que há espaço antes de escrever
+                doc.text(text, marginLeft, y);
+                y += 10;
+            });
         }
     
+        checkPageBreak(10);
         doc.text("Os processos da página:", marginLeft, y);
         y += 10;
     
         dataReceive.Lawsuits.Lawsuits.forEach((val, i) => {
-            if (y > 270) {
-                doc.addPage();
-                y = 10;
-            }
+            checkPageBreak(50); // Verifica se há espaço para o bloco do processo
     
             doc.setFont("helvetica", "bold");
             doc.text(`${i + 1}. ${val.Number}`, marginLeft, y);
             y += 8;
             doc.setFont("helvetica", "normal");
     
-            const mainSubjectLines = doc.splitTextToSize(`Assunto: ${val.MainSubject}`, maxWidth);
-            doc.text(mainSubjectLines, marginLeft + 10, y);
-            y += mainSubjectLines.length * 6;
+            const processData = [
+                { label: "Assunto", value: val.MainSubject },
+                { label: "Status", value: `(${val.Status})` },
+                { label: "Nome do Tribunal", value: val.CourtName },
+                { label: "Tipo de Tribunal", value: val.CourtType },
+                { label: "Nível do Tribunal", value: val.CourtLevel },
+                { label: "Corpo Julgador", value: val.JudgingBody },
+                { label: "Estado", value: val.State }
+            ];
     
-            const statusLines = doc.splitTextToSize(`Status: (${val.Status})`, maxWidth);
-            doc.text(statusLines, marginLeft + 10, y);
-            y += statusLines.length * 6;
-    
-            const courtNameLines = doc.splitTextToSize(`Nome do Tribunal: ${val.CourtName}`, maxWidth);
-            doc.text(courtNameLines, marginLeft + 10, y);
-            y += courtNameLines.length * 6;
-    
-            const courtTypeLines = doc.splitTextToSize(`Tipo de Tribunal: ${val.CourtType}`, maxWidth);
-            doc.text(courtTypeLines, marginLeft + 10, y);
-            y += courtTypeLines.length * 6;
-    
-            const courtLevelLines = doc.splitTextToSize(`Nível do Tribunal: ${val.CourtLevel}`, maxWidth);
-            doc.text(courtLevelLines, marginLeft + 10, y);
-            y += courtLevelLines.length * 6;
-    
-            const judgingBodyLines = doc.splitTextToSize(`Corpo Julgador: ${val.JudgingBody}`, maxWidth);
-            doc.text(judgingBodyLines, marginLeft + 10, y);
-            y += judgingBodyLines.length * 6;
-    
-            const stateLines = doc.splitTextToSize(`Estado: ${val.State}`, maxWidth);
-            doc.text(stateLines, marginLeft + 10, y);
-            y += stateLines.length * 6;
+            processData.forEach(({ label, value }) => {
+                const lines = doc.splitTextToSize(`${label}: ${value}`, maxWidth);
+                checkPageBreak(lines.length * 6); // Checa antes de adicionar cada item
+                doc.text(lines, marginLeft + 10, y);
+                y += lines.length * 6;
+            });
     
             y += 5; // Espaço extra entre registros
         });
     
         doc.save("relatorio-consulta.pdf");
     };
+    
     
     
 
