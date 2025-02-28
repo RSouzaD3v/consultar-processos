@@ -123,49 +123,54 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
             "Nível do tribunal": val.CourtLevel,
             "Corpo Julgador": val.JudgingBody,
             "Estado": val.State,
+            "Total de Processos": data?.Lawsuits.TotalLawsuits,
+            "Total de Processos como Autor": data?.Lawsuits.TotalLawsuitsAsAuthor,
+            "Total de Processos como Defensor": data?.Lawsuits.TotalLawsuitsAsDefendant,
+            "Total de Processos como Outros": data?.Lawsuits.TotalLawsuitsAsOther
         }));
         const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Consultas");
         const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-        const data = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8" });
-        saveAs(data, "relatorio-consulta.xlsx");
+        const dataE = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8" });
+        saveAs(dataE, "relatorio-consulta.xlsx");
     };
 
     return (
         <section>
             <hr className="my-5"/>
+            <h1 className="font-bold text-2xl my-5">Cada página retorna no máximo 100 processos.</h1>
             {dataReceive && (
                 <div>
                     {data && (
                         <div className="grid md:grid-cols-4 md:grid-rows-2 gap-5">
                             <div className="bg-blue-950/50 text-white p-2 rounded-md">
                                 <h1>Total Processos:</h1>
-                                <h1>{data.Lawsuits.TotalLawsuits}</h1>
+                                <h1 className="text-3xl font-bold">{data.Lawsuits.TotalLawsuits}</h1>
                             </div>
                             <div className="bg-blue-950/50 text-white p-2 rounded-md">
                                 <h1>Processos como Autor:</h1>
-                                <h1>{data.Lawsuits.TotalLawsuitsAsAuthor}</h1>
+                                <h1 className="text-3xl font-bold">{data.Lawsuits.TotalLawsuitsAsAuthor}</h1>
                             </div>
                             <div className="bg-blue-950/50 text-white p-2 rounded-md">
                                 <h1>Processos como Defensor:</h1>
-                                <h1>{data.Lawsuits.TotalLawsuitsAsDefendant}</h1>
+                                <h1 className="text-3xl font-bold">{data.Lawsuits.TotalLawsuitsAsDefendant}</h1>
                             </div>
                             <div className="bg-blue-950/50 text-white p-2 rounded-md">
                                 <h1>Últimos 180 dias:</h1>
-                                <h1>{data.Lawsuits.Last180DaysLawsuits}</h1>
+                                <h1 className="text-3xl font-bold">{data.Lawsuits.Last180DaysLawsuits}</h1>
                             </div>
                             <div className="bg-blue-950/50 text-white p-2 rounded-md">
                                 <h1>Últimos 30 dias:</h1>
-                                <h1>{data.Lawsuits.Last30DaysLawsuits}</h1>
+                                <h1 className="text-3xl font-bold">{data.Lawsuits.Last30DaysLawsuits}</h1>
                             </div>
                             <div className="bg-blue-950/50 text-white p-2 rounded-md">
                                 <h1>Últimos 365 dias:</h1>
-                                <h1>{data.Lawsuits.Last365DaysLawsuits}</h1>
+                                <h1 className="text-3xl font-bold">{data.Lawsuits.Last365DaysLawsuits}</h1>
                             </div>
                             <div className="bg-blue-950/50 text-white p-2 rounded-md">
                                 <h1>Últimos 90 dias:</h1>
-                                <h1>{data.Lawsuits.Last90DaysLawsuits}</h1>
+                                <h1 className="text-3xl font-bold">{data.Lawsuits.Last90DaysLawsuits}</h1>
                             </div>
                         </div>
                     )}
