@@ -34,32 +34,84 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
     // Função para gerar e baixar o PDF
     const handleDownloadPDF = () => {
         if (!dataReceive) return;
-
+    
         const doc = new jsPDF();
+        const pageWidth = doc.internal.pageSize.getWidth(); // Largura da página
+        const marginLeft = 10;
+        const maxWidth = pageWidth - 20; // Define a largura máxima do texto para evitar corte
+        let y = 10; // Posição vertical inicial
+    
         doc.setFont("helvetica", "bold");
-        doc.text("Relatório de Consultas", 10, 10);
+        doc.text("Relatório de Consultas", marginLeft, y);
+        y += 10;
         doc.setFont("helvetica", "normal");
-        if(data) {
-            doc.text(`Total Processos: ${data.Lawsuits.TotalLawsuits}`, 10, 20);
-            doc.text(`Processos como Autor: ${data.Lawsuits.TotalLawsuitsAsAuthor}`, 10, 30);
-            doc.text(`Processos como Defensor: ${data.Lawsuits.TotalLawsuitsAsDefendant}`, 10, 40);
-            doc.text(`Últimos 180 dias: ${data.Lawsuits.Last180DaysLawsuits}`, 10, 50);
-            doc.text(`Últimos 30 dias: ${data.Lawsuits.Last30DaysLawsuits}`, 10, 60);
-            doc.text(`Últimos 365 dias: ${data.Lawsuits.Last365DaysLawsuits}`, 10, 70);
-            doc.text(`Últimos 90 dias: ${data.Lawsuits.Last90DaysLawsuits}`, 10, 80);
+    
+        if (data) {
+            doc.text(`Total Processos: ${data.Lawsuits.TotalLawsuits}`, marginLeft, y);
+            y += 10;
+            doc.text(`Processos como Autor: ${data.Lawsuits.TotalLawsuitsAsAuthor}`, marginLeft, y);
+            y += 10;
+            doc.text(`Processos como Defensor: ${data.Lawsuits.TotalLawsuitsAsDefendant}`, marginLeft, y);
+            y += 10;
+            doc.text(`Últimos 180 dias: ${data.Lawsuits.Last180DaysLawsuits}`, marginLeft, y);
+            y += 10;
+            doc.text(`Últimos 30 dias: ${data.Lawsuits.Last30DaysLawsuits}`, marginLeft, y);
+            y += 10;
+            doc.text(`Últimos 365 dias: ${data.Lawsuits.Last365DaysLawsuits}`, marginLeft, y);
+            y += 10;
+            doc.text(`Últimos 90 dias: ${data.Lawsuits.Last90DaysLawsuits}`, marginLeft, y);
+            y += 10;
         }
-
-        doc.text("Os 10 processos da página:", 10, 100);
+    
+        doc.text("Os processos da página:", marginLeft, y);
+        y += 10;
+    
         dataReceive.Lawsuits.Lawsuits.forEach((val, i) => {
-            const y = 110 + i * 10;
             if (y > 270) {
                 doc.addPage();
+                y = 10;
             }
-            doc.text(`${i + 1}. ${val.Number} - ${val.MainSubject} (${val.Status})`, 10, y);
+    
+            doc.setFont("helvetica", "bold");
+            doc.text(`${i + 1}. ${val.Number}`, marginLeft, y);
+            y += 8;
+            doc.setFont("helvetica", "normal");
+    
+            const mainSubjectLines = doc.splitTextToSize(`Assunto: ${val.MainSubject}`, maxWidth);
+            doc.text(mainSubjectLines, marginLeft + 10, y);
+            y += mainSubjectLines.length * 6;
+    
+            const statusLines = doc.splitTextToSize(`Status: (${val.Status})`, maxWidth);
+            doc.text(statusLines, marginLeft + 10, y);
+            y += statusLines.length * 6;
+    
+            const courtNameLines = doc.splitTextToSize(`Nome do Tribunal: ${val.CourtName}`, maxWidth);
+            doc.text(courtNameLines, marginLeft + 10, y);
+            y += courtNameLines.length * 6;
+    
+            const courtTypeLines = doc.splitTextToSize(`Tipo de Tribunal: ${val.CourtType}`, maxWidth);
+            doc.text(courtTypeLines, marginLeft + 10, y);
+            y += courtTypeLines.length * 6;
+    
+            const courtLevelLines = doc.splitTextToSize(`Nível do Tribunal: ${val.CourtLevel}`, maxWidth);
+            doc.text(courtLevelLines, marginLeft + 10, y);
+            y += courtLevelLines.length * 6;
+    
+            const judgingBodyLines = doc.splitTextToSize(`Corpo Julgador: ${val.JudgingBody}`, maxWidth);
+            doc.text(judgingBodyLines, marginLeft + 10, y);
+            y += judgingBodyLines.length * 6;
+    
+            const stateLines = doc.splitTextToSize(`Estado: ${val.State}`, maxWidth);
+            doc.text(stateLines, marginLeft + 10, y);
+            y += stateLines.length * 6;
+    
+            y += 5; // Espaço extra entre registros
         });
-
+    
         doc.save("relatorio-consulta.pdf");
     };
+    
+    
 
     const handleDownloadExcel = () => {
         if (!dataReceive) return;
@@ -68,6 +120,11 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
             "Assunto Principal": val.MainSubject,
             "Status": val.Status,
             "Última Atualização": val.LastUpdate,
+            "Nome do tribunal": val.CourtName,
+            "Tipo do tribunal": val.CourtType,
+            "Nível do tribunal": val.CourtLevel,
+            "Corpo Julgador": val.JudgingBody,
+            "Estado": val.State,
         }));
         const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
         const workbook = XLSX.utils.book_new();
@@ -79,7 +136,7 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
 
     return (
         <section>
-            <hr />
+            <hr className="my-5"/>
             {dataReceive && (
                 <div>
                     {data && (
@@ -115,22 +172,57 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
                         </div>
                     )}
 
-                    <div>
+                    <div className="">
                         {dataReceive.Lawsuits.Lawsuits.map((val, i) => (
-                            <div key={i} className="flex sm:items-center sm:flex-row flex-col items-start sm:justify-between p-3 my-3 bg-blue-950/50">
-                                <div>
-                                    <h1 className="font-bold">{val.LastUpdate}</h1>
-                                    <h4 className="text-white/50">Última Atualização</h4>
+                            <div key={i} className="flex items-center overflow-x-auto my-3 p-5 bg-blue-950/50 gap-5">
+                                <div className="min-w-[200px]">
+                                    <h1 className="font-bold whitespace-nowrap">{val.LastUpdate}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap" >Última Atualização</h4>
                                 </div>
 
-                                <div className="sm:w-[400px] my-2">
-                                    <h1>{val.MainSubject}</h1>
-                                    <h4>{val.Number}</h4>
+                                <div className="min-w-[500px]">
+                                    <h1 className="whitespace-normal">{val.MainSubject}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap">{val.Number}</h4>
                                 </div>
 
-                                <div>
-                                    <h1>{val.Status}</h1>
-                                    <h4>Status</h4>
+                                <div className="min-w-[220px]">
+                                    <h1 className="whitespace-nowrap">{val.Status}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap">Status</h4>
+                                </div>
+
+                                <div className="min-w-[200px]">
+                                    <h1 className="whitespace-nowrap">{val.CourtName}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap">Nome Tribunal</h4>
+                                </div>
+
+                                <div className="min-w-[200px]">
+                                    <h1 className="whitespace-nowrap">{val.CourtLevel}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap">Nível de Tribunal</h4>
+                                </div>
+
+                                <div className="min-w-[200px]">
+                                    <h1 className="whitespace-nowrap">{val.CourtType}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap">Tipo de Tribunal</h4>
+                                </div>
+
+                                <div className="min-w-[450px]">
+                                    <h1 className="whitespace-nowrap">{val.JudgingBody}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap">Corpo Julgador</h4>
+                                </div>
+
+                                <div className="min-w-[100px]">
+                                    <h1 className="whitespace-nowrap">{val.State}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap">Estado</h4> 
+                                </div>
+
+                                <div className="min-w-[150px]">
+                                    <h1 className="whitespace-normal">{val.Type}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap">Tipo</h4> 
+                                </div>
+
+                                <div className="min-w-[150px]">
+                                    <h1 className="whitespace-normal">{val.Value}</h1>
+                                    <h4 className="text-white/50 whitespace-nowrap">Valor</h4> 
                                 </div>
                             </div>
                         ))}

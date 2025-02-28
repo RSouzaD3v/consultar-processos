@@ -27,11 +27,13 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        const cleanedValue = doc.replace(/[^\d]/g, "");
+
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_URL_BIGDATA}/empresas`,
             {
                 Datasets: `processes.next(${nextPageId})`,
-                q: `doc{${doc}}`
+                q: `doc{${cleanedValue}}`
             },
             {
                 headers: {

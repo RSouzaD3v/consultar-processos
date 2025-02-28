@@ -37,10 +37,11 @@ export async function POST(req: NextRequest) {
         let responseData;
 
         if (doc.length === 11) {
+            const cleanedValue = doc.replace(/[^\d]/g, "");
             const [personConsultation, personBasicData] = await Promise.all([
                 axios.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/pessoas`, {
-                    Datasets: "processes.limit(10)",
-                    q: `doc{${doc}}`
+                    Datasets: "processes",
+                    q: `doc{${cleanedValue}}`
                 }, {
                     headers: {
                         "Content-Type": "application/json",
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
 
                 axios.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/pessoas`, {
                     Datasets: "basic_data",
-                    q: `doc{${doc}}`
+                    q: `doc{${cleanedValue}}`
                 }, {
                     headers: {
                         "Content-Type": "application/json",
@@ -80,10 +81,11 @@ export async function POST(req: NextRequest) {
             };
 
         } else if (doc.length === 14) {
+            const cleanedValue = doc.replace(/[^\d]/g, "");
             const [consultationBusiness, basicDataBusiness] = await Promise.all([
                 axios.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/empresas`, {
-                    Datasets: "processes.limit(10)",
-                    q: `doc{${doc}}`
+                    Datasets: "processes",
+                    q: `doc{${cleanedValue}}`
                 }, {
                     headers: {
                         "Content-Type": "application/json",
@@ -92,25 +94,18 @@ export async function POST(req: NextRequest) {
                     }
                 }),
 
-                axios.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/empresas`, {
-                    Datasets: "registration_data",
-                    q: `doc{${doc}}`
-                }, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "TokenId": process.env.NEXT_PUBLIC_TOKEN_ID,
-                        "AccessToken": process.env.NEXT_PUBLIC_ACCESS_TOKEN
-                    }
-                })
+                axios.get(`https://www.empresaqui.com.br/api/86b1e1c80081651781715693aa2299d93720b5d7/${cleanedValue}`)
             ]);
+
+            console.log("Dados basicos empresa", basicDataBusiness.data);
 
             const save = await db.consultation.create({
                 data: {
                     custom_name: custom_name,
                     queryDate: consultationBusiness.data.QueryDate,
                     queryId: consultationBusiness.data.QueryId,
-                    name: basicDataBusiness.data.Result[0].RegistrationData.BasicData.OfficialName,
-                    document: basicDataBusiness.data.Result[0].RegistrationData.BasicData.TaxIdNumber,
+                    name: basicDataBusiness.data.razao,
+                    document: basicDataBusiness.data.cnpj,
                     userId: getUser.id,
                     type_consultation: "Empresa"
                 }

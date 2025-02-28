@@ -2,9 +2,8 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SearchCheck, ScreenShareIcon } from "lucide-react";
+import { SearchCheck } from "lucide-react";
 import { useState } from "react";
-import Link from "next/link";
 import { ViewConsultationTemporary } from "./_components/view-consultation-temporary-bussiness";
 import { ViewConsultationTemporaryPerson } from "./_components/view-consultation-temporary-person";
 import { DataJsonTypes } from "../view-consultation/[id]/_components/ViewBussiness";
@@ -32,7 +31,6 @@ export default function ConsultationPage() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [idSaved, setIdSaved] = useState<string | null>(null);
   const [data, setData] = useState<DataJsonTypes | null>(null);
   const [dataPerson, setDataPerson] = useState<DataJsonTypesPerson | null>(null);
 
@@ -53,14 +51,12 @@ export default function ConsultationPage() {
       const result = await response.json();
 
       if (data.doc.length === 14) {
-        console.log(result.consultationBusiness.Result[0]);
-        setData(result.consultationBusiness.Result[0]);
+        console.log(result.consultationBusiness?.Result[0]);
+        setData(result.consultationBusiness?.Result[0]);
       } else if (data.doc.length === 11) {
-        console.log(result.personConsultation.Result[0]);
-        setDataPerson(result.personConsultation.Result[0]);
+        console.log(result.personConsultation?.Result[0]);
+        setDataPerson(result.personConsultation?.Result[0]);
       }
-
-      setIdSaved(result.saveInDb.id);
     } catch (e) {
       console.log(e);
     } finally {
@@ -110,17 +106,9 @@ export default function ConsultationPage() {
               "Consultar"
             )}
           </button>
-          <div>
-            {idSaved && (
-              <Link className="text-blue-500 font-bold my-5 flex items-center gap-2" href={`/view-consultation/${idSaved}`}>
-                Visualizar consulta
-                <ScreenShareIcon />
-              </Link>
-            )}
-          </div>
         </form>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 mt-10">
         {data && <ViewConsultationTemporary data={data} />}
         {dataPerson && <ViewConsultationTemporaryPerson data={dataPerson} />}
       </div>
