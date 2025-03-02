@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
             const cleanedValue = doc.replace(/[^\d]/g, "");
             const [personConsultation, personBasicData] = await Promise.all([
                 axios.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/pessoas`, {
-                    Datasets: "processes",
+                    Datasets: "processes.limit(50)",
                     q: `doc{${cleanedValue}}`
                 }, {
                     headers: {
