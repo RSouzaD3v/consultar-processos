@@ -1,10 +1,9 @@
-import { db } from "@/lib/db";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
 const apiClient = axios.create({
-    timeout: 9500, 
+    timeout: 9500,
     headers: {
         "Content-Type": "application/json",
         "TokenId": process.env.NEXT_PUBLIC_TOKEN_ID,
@@ -32,22 +31,11 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const getUser = await db.user.findFirst({
-            where: { clerkId: userId }
-        });
-
-        if (!getUser) {
-            return NextResponse.json(
-                { error: true, message: "Usuário não encontrado" },
-                { status: 404 }
-            );
-        }
-
         let responseData;
+        const cleanedValue = doc.replace(/[^\d]/g, "");
 
         if (doc.length === 11) {
-            const cleanedValue = doc.replace(/[^\d]/g, "");
-            const [personConsultation, personBasicData] = await Promise.all([
+            const [personConsultation, personBasicData] = await Promise.allSettled([
                 apiClient.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/pessoas`, {
                     Datasets: "processes.limit(50)",
                     q: `doc{${cleanedValue}}`
@@ -59,53 +47,24 @@ export async function POST(req: NextRequest) {
                 })
             ]);
 
-            const save = await db.consultation.create({
-                data: {
-                    custom_name: custom_name,
-                    queryDate: personConsultation.data.QueryDate,
-                    queryId: personConsultation.data.QueryId,
-                    name: personBasicData.data.Result[0].BasicData.Name,
-                    document: personBasicData.data.Result[0].BasicData.TaxIdNumber,
-                    userId: getUser.id,
-                    type_consultation: "Pessoa"
-                }
-            })
-
             responseData = {
-                personConsultation: personConsultation.data,
-                personBasicData: personBasicData.data,
-                saveInDb: save
+                personConsultation: personConsultation.status === "fulfilled" ? personConsultation.value.data : { error: true, message: "Erro na consulta de processos" },
+                personBasicData: personBasicData.status === "fulfilled" ? personBasicData.value.data : { error: true, message: "Erro na consulta de dados básicos" }
             };
 
         } else if (doc.length === 14) {
-            const cleanedValue = doc.replace(/[^\d]/g, "");
-            const [consultationBusiness, basicDataBusiness] = await Promise.all([
+            const [consultationBusiness, basicDataBusiness] = await Promise.allSettled([
                 apiClient.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/empresas`, {
                     Datasets: "processes.limit(50)",
                     q: `doc{${cleanedValue}}`
                 }),
 
-                axios.get(`https://www.empresaqui.com.br/api/86b1e1c80081651781715693aa2299d93720b5d7/${cleanedValue}`)
+                axios.get(`https://www.empresaqui.com.br/api/86b1e1c80081651781715693aa2299d93720b5d7/${cleanedValue}`, { timeout: 9500 })
             ]);
 
-            console.log("Dados basicos empresa", basicDataBusiness.data);
-
-            const save = await db.consultation.create({
-                data: {
-                    custom_name: custom_name,
-                    queryDate: consultationBusiness.data.QueryDate,
-                    queryId: consultationBusiness.data.QueryId,
-                    name: basicDataBusiness.data.razao,
-                    document: basicDataBusiness.data.cnpj,
-                    userId: getUser.id,
-                    type_consultation: "Empresa"
-                }
-            })
-
             responseData = {
-                consultationBusiness: consultationBusiness.data,
-                basicDataBusiness: basicDataBusiness.data,
-                saveInDb: save
+                consultationBusiness: consultationBusiness.status === "fulfilled" ? consultationBusiness.value.data : { error: true, message: "Erro na consulta de processos da empresa" },
+                basicDataBusiness: basicDataBusiness.status === "fulfilled" ? basicDataBusiness.value.data : { error: true, message: "Erro na consulta de dados básicos da empresa" }
             };
 
         } else {
