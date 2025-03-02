@@ -3,6 +3,15 @@ import { getAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
+const apiClient = axios.create({
+    timeout: 9500, 
+    headers: {
+        "Content-Type": "application/json",
+        "TokenId": process.env.NEXT_PUBLIC_TOKEN_ID,
+        "AccessToken": process.env.NEXT_PUBLIC_ACCESS_TOKEN
+    }
+});
+
 export async function POST(req: NextRequest) {
     try {
         const { userId } = getAuth(req);
@@ -39,26 +48,14 @@ export async function POST(req: NextRequest) {
         if (doc.length === 11) {
             const cleanedValue = doc.replace(/[^\d]/g, "");
             const [personConsultation, personBasicData] = await Promise.all([
-                axios.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/pessoas`, {
+                apiClient.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/pessoas`, {
                     Datasets: "processes.limit(50)",
                     q: `doc{${cleanedValue}}`
-                }, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "TokenId": process.env.NEXT_PUBLIC_TOKEN_ID,
-                        "AccessToken": process.env.NEXT_PUBLIC_ACCESS_TOKEN
-                    }
                 }),
 
-                axios.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/pessoas`, {
+                apiClient.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/pessoas`, {
                     Datasets: "basic_data",
                     q: `doc{${cleanedValue}}`
-                }, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "TokenId": process.env.NEXT_PUBLIC_TOKEN_ID,
-                        "AccessToken": process.env.NEXT_PUBLIC_ACCESS_TOKEN
-                    }
                 })
             ]);
 
@@ -83,15 +80,9 @@ export async function POST(req: NextRequest) {
         } else if (doc.length === 14) {
             const cleanedValue = doc.replace(/[^\d]/g, "");
             const [consultationBusiness, basicDataBusiness] = await Promise.all([
-                axios.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/empresas`, {
+                apiClient.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/empresas`, {
                     Datasets: "processes.limit(50)",
                     q: `doc{${cleanedValue}}`
-                }, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "TokenId": process.env.NEXT_PUBLIC_TOKEN_ID,
-                        "AccessToken": process.env.NEXT_PUBLIC_ACCESS_TOKEN
-                    }
                 }),
 
                 axios.get(`https://www.empresaqui.com.br/api/86b1e1c80081651781715693aa2299d93720b5d7/${cleanedValue}`)
