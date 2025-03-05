@@ -3,7 +3,7 @@ import { useState } from "react";
 import { jsPDF } from "jspdf";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { LawsuitsTypes } from "../../view-consultation/[id]/_components/ViewBussiness";
+import { LawsuitsTypes } from "./view-consultation-temporary-bussiness";
 
 interface ProcessesTypes {
     Last30DaysLawsuits: number
