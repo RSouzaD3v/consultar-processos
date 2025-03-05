@@ -3,7 +3,67 @@ import { useState } from "react";
 import { jsPDF } from "jspdf";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { DataJsonTypes } from "../../view-consultation/[id]/_components/ViewBussiness";
+
+export interface LawsuitsTypes {
+    AverageNumberOfUpdatesPerMonth: number;
+    CaptureDate: string;
+    CloseDate: string;
+    CourtDistrict: string;
+    CourtLevel: string | number;
+    CourtName: string;
+    CourtType: string;
+    Decisions: [];
+    InferredBroadCNJSubjectName: string;
+    InferredBroadCNJSubjectNumber: number;
+    InferredCNJProcedureTypeName: string;
+    InferredCNJProcedureTypeNumber: number;
+    InferredCNJSubjectName: string;
+    InferredCNJSubjectNumber: number;
+    JudgingBody: string;
+    LastMovementDate: string;
+    LastUpdate: string;
+    LawSuitAge: number;
+    LawsuitHostService: string;
+    MainSubject: string;
+    NoticeDate: string;
+    Number: string;
+    NumberOfPages: number;
+    NumberOfParties: number;
+    NumberOfUpdates: number;
+    NumberOfVolumes: number;
+    OtherSubjects: string[];
+    Parties: object[];
+    Petitions: [];
+    PublicationDate: string;
+    ReasonForConcealedData: number;
+    RedistributionDate: string;
+    ResJudicataDate: string;
+    State: string;
+    Status: string;
+    Type: string;
+    Updates: object[];
+    Value: number;
+}
+
+export interface ProcessesTypes {
+    FirstLawsuitDate: string;
+    Last30DaysLawsuits: number;
+    Last90DaysLawsuits: number;
+    Last180DaysLawsuits: number;
+    Last365DaysLawsuits: number;
+    LastLawsuitDate: string;
+    Lawsuits: LawsuitsTypes[];
+    NextPageId: string;
+    TotalLawsuits: number;
+    TotalLawsuitsAsAuthor: number;
+    TotalLawsuitsAsDefendant: number;
+    TotalLawsuitsAsOther: number;
+}
+
+export interface DataJsonTypes {
+    MatchKeys: string;
+    Lawsuits: ProcessesTypes;
+}
 
 export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null }) => {
     const [dataReceive, setDataReceive] = useState(data);
@@ -139,7 +199,10 @@ export const ViewConsultationTemporary = ({ data }: { data: DataJsonTypes | null
     return (
         <section>
             <hr className="my-5"/>
-            <h1 className="font-bold text-2xl my-5">Cada página retorna no máximo 100 processos.</h1>
+            <div className="my-5">
+                <h1 className="font-bold text-2xl">Cada página retorna no máximo 30 processos.</h1>
+                <p>Se precisar ver mais processos, aperte no botão de próxima página</p>
+            </div>
             {dataReceive && (
                 <div>
                     {data && (

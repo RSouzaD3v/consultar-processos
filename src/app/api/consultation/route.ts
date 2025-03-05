@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
         } else if (doc.length === 14) {
             const [consultationBusiness, basicDataBusiness] = await Promise.allSettled([
                 apiClient.post(`${process.env.NEXT_PUBLIC_URL_BIGDATA}/empresas`, {
-                    Datasets: "processes.limit(50)",
+                    Datasets: "processes.limit(30)",
                     q: `doc{${cleanedValue}}`
                 }),
 
