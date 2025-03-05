@@ -3,27 +3,9 @@ import { useState } from "react";
 import { jsPDF } from "jspdf";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { LawsuitsTypes } from "./view-consultation-temporary-bussiness";
+import { DataPersonTypes } from "@/types/ConsultationPersonTypes";
 
-interface ProcessesTypes {
-    Last30DaysLawsuits: number
-    Last90DaysLawsuits: number;
-    Last180DaysLawsuits: number;
-    Last365DaysLawsuits: number;
-    Lawsuits: [LawsuitsTypes];
-    NextPageId: string;
-    TotalLawsuits: number;
-    TotalLawsuitsAsAuthor: number;
-    TotalLawsuitsAsDefendant: number;
-    TotalLawsuitsAsOther: number;
-}
-
-export interface DataJsonTypesPerson {
-    MatchKeys: string;
-    Processes: ProcessesTypes;
-}
-
-export const ViewConsultationTemporaryPerson = ({ data }: { data: DataJsonTypesPerson | null }) => {
+export const ViewConsultationTemporaryPerson = ({ data }: { data: DataPersonTypes | null }) => {
     const [dataReceive, setDataReceive] = useState(data);
     const [loading, setLoading] = useState<boolean>(false);
 

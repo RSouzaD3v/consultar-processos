@@ -6,68 +6,9 @@ import { SearchCheck } from "lucide-react";
 import { useState } from "react";
 import { ViewConsultationTemporary } from "./_components/view-consultation-temporary-bussiness";
 import { ViewConsultationTemporaryPerson } from "./_components/view-consultation-temporary-person";
-import { DataJsonTypesPerson } from "./_components/view-consultation-temporary-person";
+import { DataCompanyTypes } from "@/types/ConsultationCompanyTypes";
+import { DataPersonTypes } from "@/types/ConsultationPersonTypes";
 
-export interface LawsuitsTypes {
-  AverageNumberOfUpdatesPerMonth: number;
-  CaptureDate: string;
-  CloseDate: string;
-  CourtDistrict: string;
-  CourtLevel: string | number;
-  CourtName: string;
-  CourtType: string;
-  Decisions: [];
-  InferredBroadCNJSubjectName: string;
-  InferredBroadCNJSubjectNumber: number;
-  InferredCNJProcedureTypeName: string;
-  InferredCNJProcedureTypeNumber: number;
-  InferredCNJSubjectName: string;
-  InferredCNJSubjectNumber: number;
-  JudgingBody: string;
-  LastMovementDate: string;
-  LastUpdate: string;
-  LawSuitAge: number;
-  LawsuitHostService: string;
-  MainSubject: string;
-  NoticeDate: string;
-  Number: string;
-  NumberOfPages: number;
-  NumberOfParties: number;
-  NumberOfUpdates: number;
-  NumberOfVolumes: number;
-  OtherSubjects: string[];
-  Parties: object[];
-  Petitions: [];
-  PublicationDate: string;
-  ReasonForConcealedData: number;
-  RedistributionDate: string;
-  ResJudicataDate: string;
-  State: string;
-  Status: string;
-  Type: string;
-  Updates: object[];
-  Value: number;
-}
-
-export interface ProcessesTypes {
-  FirstLawsuitDate: string;
-  Last30DaysLawsuits: number;
-  Last90DaysLawsuits: number;
-  Last180DaysLawsuits: number;
-  Last365DaysLawsuits: number;
-  LastLawsuitDate: string;
-  Lawsuits: LawsuitsTypes[];
-  NextPageId: string;
-  TotalLawsuits: number;
-  TotalLawsuitsAsAuthor: number;
-  TotalLawsuitsAsDefendant: number;
-  TotalLawsuitsAsOther: number;
-}
-
-export interface DataJsonTypes {
-  MatchKeys: string;
-  Lawsuits: ProcessesTypes;
-}
 
 const schema = z.object({
   custom_name: z.string().nonempty("O nome não pode estar vazio"),
@@ -91,8 +32,8 @@ export default function ConsultationPage() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<DataJsonTypes | null>(null);
-  const [dataPerson, setDataPerson] = useState<DataJsonTypesPerson | null>(null);
+  const [data, setData] = useState<DataCompanyTypes | null>(null);
+  const [dataPerson, setDataPerson] = useState<DataPersonTypes | null>(null);
 
   const onSubmit = async (data: FormData) => {
     try {
