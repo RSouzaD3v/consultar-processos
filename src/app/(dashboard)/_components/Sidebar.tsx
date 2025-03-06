@@ -3,11 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Home, SearchIcon } from "lucide-react";
+import { Home, SearchIcon, HousePlus } from "lucide-react";
 
 export const menuItems = [
     { name: "Overview", icon: Home, href: "/overview", description: null },
-    { name: "Consultar", icon: SearchIcon, href: "/consultation", description: "Aqui você poderá consultar processos de pessoas físicas e jurídicas" },
+    { name: "Processos", icon: SearchIcon, href: "/consultation", description: "Aqui você poderá consultar processos de pessoas físicas e jurídicas." },
+    { name: "Consultar Empresas", icon: HousePlus, href: "/business-monitoring", description: "Aqui você poderá saber mais sobre essa empresa." },
 ];
 
 export const Sidebar = () => {
