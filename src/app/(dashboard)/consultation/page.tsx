@@ -2,7 +2,6 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SearchCheck } from "lucide-react";
 import { useState } from "react";
 import { ViewConsultationTemporary } from "./_components/view-consultation-temporary-bussiness";
 import { ViewConsultationTemporaryPerson } from "./_components/view-consultation-temporary-person";
@@ -66,18 +65,19 @@ export default function ConsultationPage() {
   };
 
   return (
-    <div className="md:ml-[200px] ml-[50px] p-5 px-10">
-      <div className="w-full flex items-center justify-center">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex items-center justify-center flex-col">
-            <SearchCheck size={50} className="my-5 text-3xl" />
-            <h1 className="text-3xl">Nova consulta de processos</h1>
-            <p>Descubra todos os processos relacionados ao documento consultado.</p>
-          </div>
+    <div className="md:ml-[250px] ml-[50px] p-5">
+      <div className="w-full flex flex-col mt-10 items-center justify-center">
+
+        <div className="text-center">
+          <h1 className="text-5xl font-bold">Solicitar Nova Consulta</h1>
+          <p className="text-xl">Coloque cpf ou cnpj para verificar históricos de processos judiciais.</p>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-10 flex flex-col md:max-w-[700px] w-full gap-5">
           <div>
             <h1>Adicione um nome para identificar a consulta</h1>
             <input
-              className="text-white border-blue-600 outline-none bg-black border rounded-md p-2 w-full"
+              className="text-white outline-none bg-secondColor rounded-md md:p-3 p-2 w-full"
               {...register("custom_name")}
               type="text"
               placeholder="Nome customizado"
@@ -86,19 +86,19 @@ export default function ConsultationPage() {
           </div>
           <div>
             <h1>
-              Digite o documento <b className="text-blue-500">(Somente Números)</b>
+              Digite o documento
             </h1>
             <input
-              className="text-white border-blue-600 outline-none bg-black border rounded-md p-2 w-full"
+              className="text-white outline-none bg-secondColor rounded-md md:p-3 p-2 w-full"
               {...register("doc")}
               type="text"
-              placeholder="123456789101112"
+              placeholder="000.000.000-00 ou 00000000000"
             />
             {errors.doc && <p className="text-red-500">{errors.doc.message}</p>}
           </div>
           <button
             disabled={loading}
-            className="bg-blue-500 w-full disabled:bg-gray-600 flex items-center justify-center text-white p-2 rounded"
+            className="bg-blue-500 w-full text-xl font-bold disabled:bg-gray-600 flex items-center justify-center text-white p-2 rounded"
             type="submit"
           >
             {loading ? (
@@ -109,7 +109,7 @@ export default function ConsultationPage() {
           </button>
         </form>
       </div>
-      <div className="flex flex-col gap-3 mt-10">
+      <div className="flex flex-col gap-3 mt-8">
         {data && <ViewConsultationTemporary data={data} />}
         {dataPerson && <ViewConsultationTemporaryPerson data={dataPerson} />}
       </div>

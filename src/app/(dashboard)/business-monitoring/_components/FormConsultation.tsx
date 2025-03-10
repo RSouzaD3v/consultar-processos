@@ -79,15 +79,15 @@ export const FormConsultation = () => {
     }
 
     return (
-        <div className="w-full flex mt-5 items-center justify-center flex-col">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex md:px-20 md:py-5 p-2 w-full items-center justify-center flex-col">
+        <div className="w-full flex mt-10 items-center justify-center flex-col">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex md:max-w-[700px] w-full items-center justify-center flex-col">
                 <div className="w-full">
                     <h1>Digite o CNPJ que deseja consultar:</h1>
-                    <input {...register("cnpj")}  type="text" name="cnpj" placeholder="12345678910111" className="bg-black border border-blue-500 p-2 rounded-md w-full"/>
+                    <input {...register("cnpj")}  type="text" name="cnpj" placeholder="12345678910111" className="bg-secondColor border md:p-3 p-2 outline-none rounded-md w-full"/>
                     {errors.cnpj && <p className="text-red-500">Deve conter no min. 14 caracteres e no máximo 18.</p>}
                 </div>
 
-                <button className="bg-blue-500 p-2 my-5 rounded-md">
+                <button className="bg-blueColor text-xl font-bold w-full text-white p-2 my-5 rounded-md">
                     {loading ? (
                         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
                     ) : (

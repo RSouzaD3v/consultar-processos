@@ -3,12 +3,31 @@ import Image from "next/image";
 import Link from "next/link";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Home, SearchIcon, HousePlus } from "lucide-react";
+import { Scale, SearchIcon, Grid } from "lucide-react";
 
 export const menuItems = [
-    { name: "Overview", icon: Home, href: "/overview", description: null },
-    { name: "Processos", icon: SearchIcon, href: "/consultation", description: "Aqui você poderá consultar processos de pessoas físicas e jurídicas." },
-    { name: "Consultar Empresas", icon: HousePlus, href: "/business-monitoring", description: "Aqui você poderá saber mais sobre essa empresa." },
+    { 
+        name: "Overview",
+        icon: Grid, href: "/overview", 
+        description: null,
+        cpf: false,
+        cnpj: false
+    },
+    { name: "Processos", 
+        icon: Scale, 
+        href: "/consultation", 
+        description: `Aqui você poderá ter detalhes de processos judiciais de uma empresa específica ou pessoa.`,
+        cpf: true,
+        cnpj: true
+    },
+    { 
+        name: "Consultar Empresas",
+        icon: SearchIcon, 
+        href: "/business-monitoring", 
+        description: `Aqui você poderá consultar sobre uma empresa específica.`,
+        cpf: false,
+        cnpj: true
+    },
 ];
 
 export const Sidebar = () => {
@@ -16,16 +35,16 @@ export const Sidebar = () => {
     const pathname = usePathname();
 
     return (
-        <div className="bg-black md:w-[200px] w-[60px] overflow-hidden flex flex-col justify-between h-screen fixed top-0 left-0 p-3">
+        <div className="bg-secondColor text-primaryColor md:w-[250px] w-[60px] overflow-hidden flex flex-col justify-between h-screen fixed top-0 left-0 p-3">
             <div>
-                <div className="flex items-center gap-2">
-                    <Image src="/logo.svg" alt="Logo" width={30} height={30} />
-                    <h3 className="hidden md:block">Consulte</h3>
+                <div className="flex items-center gap-2 my-5">
+                    <Image src="/logo.svg" alt="Logo" width={35} height={35} />
+                    <h3 className="hidden text-xl md:block">Neosimplify</h3>
                 </div>
 
-                <hr className="my-2 opacity-15" />
+                <hr className="my-10 opacity-15" />
 
-                <div>
+                <div className="flex flex-col gap-3">
                     {menuItems.map((item) => {
                         const isActive = pathname === item.href;
                         const IconComponent = item.icon;
@@ -35,17 +54,17 @@ export const Sidebar = () => {
                                 key={item.href}
                                 title={item.name}
                                 href={item.href}
-                                className={`flex items-center gap-2 p-2 rounded-md hover:bg-gray-800 ${isActive ? "bg-gray-800" : ""}`}
+                                className={`flex items-center gap-3 p-2 rounded-md hover:bg-gray-800 ${isActive ? "bg-white/10" : ""}`}
                             >
-                                <IconComponent size={20} />
-                                <h4 className="md:block hidden">{item.name}</h4>
+                                <IconComponent className="text-secondColor" size={28} />
+                                <h4 className="md:block hidden text-xl">{item.name}</h4>
                             </Link>
                         );
                     })}
                 </div>
             </div>
 
-            <div className="flex gap-2 justify-center text-center w-full">
+            <div className="flex gap-2 text-center w-full">
                 <SignedIn>
                     <UserButton />
                 </SignedIn>
