@@ -5,7 +5,6 @@ import { CardSubscription } from "@/components/card-subscription";
 import { AlertTriangle } from "lucide-react";
 
 export default async function DashboardLayout({children,}: Readonly<{children: React.ReactNode;}>) {
-
   const user = await currentUser(); // Obtém os detalhes do usuário
   const email = user?.emailAddresses[0]?.emailAddress as string;
 

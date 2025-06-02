@@ -6,14 +6,9 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div>
-      <div className="fixed -z-50 top-0 left-0 w-screen h-screen overflow-hidden">
-        <div className="bg-blue-500 fixed top-0 -left-10 w-[250px] h-[250px] animate-pulse rounded-full blur-3xl"></div>
-        <div className="bg-blue-500 fixed bottom-0 -right-10 w-[250px] h-[250px] animate-pulse rounded-full blur-3xl"></div>
-      </div>
-
       <Header />
 
-      <main className="flex items-center w-full h-screen justify-center bg-black/60 backdrop-blur-[15px]">
+      <main className="flex items-center w-full h-screen justify-center">
         <Container className="flex items-center justify-center flex-col gap-3">
           <div className="flex items-center gap-2">
             <Image width={100} height={100} src={"/avatar-group.png"} alt="" />
@@ -31,10 +26,10 @@ export default function Home() {
 
           <div className="flex items-center gap-2 mt-5">
             <Link href={"/overview"}>
-              <button className="bg-blue-500 rounded-md p-3 px-5 border border-white hover:bg-blue-600">Começar</button>
+              <button className="bg-blue-500 rounded-md p-3 px-5 border border-white text-white hover:bg-blue-600">Começar</button>
             </Link>
             <Link href={"/overview"}>
-             <button className="rounded-md p-3 px-5 border border-white/50 hover:bg-blue-500">Saiba Mais</button>
+             <button className="rounded-md p-3 px-5 border-white/50 border border-gray-400 hover:bg-blue-500 hover:text-white">Saiba Mais</button>
             </Link>
           </div>
         </Container>

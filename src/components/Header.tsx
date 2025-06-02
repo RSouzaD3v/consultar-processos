@@ -11,9 +11,7 @@ const Header: React.FC = () => {
     return (
         <div className='flex fixed z-50 top-0 w-full items-center justify-center md:p-0 p-2'>
             <Container>
-                <header className='w-full flex my-2
-                bg-black/20 backdrop-blur-sm items-center
-                justify-between p-2 border border-white/50 rounded-2xl'>
+                <header className='w-full flex my-2 items-center justify-between p-2 border border-white/50 rounded-2xl'>
                     <div>
                         <Image width={40} height={40} src={"/logo.svg"} alt='logo' />
                     </div>
@@ -27,7 +25,7 @@ const Header: React.FC = () => {
                     </nav>
 
                     <div className='sm:block hidden'>
-                        <Link className='bg-blue-500 p-3 rounded-3xl px-5' href="/overview">Overview</Link>
+                        <Link className='bg-blue-500 p-3 rounded-3xl px-5 text-white' href="/overview">Overview</Link>
                     </div>
 
                     <div className='block sm:hidden'>

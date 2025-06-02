@@ -53,6 +53,47 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>
 
+// Mock para desenvolvimento local
+// const mockData: ResponseData = {
+//     informationCompany: {
+//         capital_social: "100000",
+//         cnae_principal: "6201-5/01",
+//         cnae_secundario: "6202-3/00",
+//         cnpj: "12345678000199",
+//         data_abertura: "20200101",
+//         data_exc_mei: "",
+//         data_exc_simples: "",
+//         data_mei: "",
+//         data_simples: null,
+//         data_sit_cad: "20200101",
+//         ddd_1: "11",
+//         ddd_2: null,
+//         email: "empresa@email.com",
+//         fantasia: "Empresa Fantasia",
+//         faturamento: "500000",
+//         log_bairro: "Centro",
+//         log_cep: "01000-000",
+//         log_comp: null,
+//         log_municipio: "São Paulo",
+//         log_nome: "Paulista",
+//         log_num: "1000",
+//         log_tipo: "Avenida",
+//         log_uf: "SP",
+//         matriz: "Sim",
+//         natureza_juridica: "Sociedade Empresária Limitada",
+//         opcao_mei: "Não",
+//         opcao_simples: "Sim",
+//         porte: "Pequeno",
+//         quadro_funcionarios: "10",
+//         razao: "Empresa de Exemplo LTDA",
+//         regime_tributario: "Lucro Presumido",
+//         site: "https://empresa.com",
+//         situacao_cadastral: "Ativa",
+//         tel_1: "11999999999",
+//         tel_2: null
+//     }
+// };
+
 export const FormConsultation = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema)
@@ -98,38 +139,42 @@ export const FormConsultation = () => {
 
             {data && (
                 <div className="w-full bg-white rounded-md text-black p-5">
-                    <div className="bg-blue-950 text-white rounded-md p-5">
+                    <div className="bg-secondColor text-white rounded-md p-5">
                         <h1 className="text-xl font-bold">Dados Básicos</h1>
                         
                         <div className="mt-5">
-                            <h1><b>Razão Social:</b> {data?.informationCompany.razao}</h1>
-                            <h1><b>CNPJ:</b> {data?.informationCompany.cnpj}</h1>
-                            <h1><b>Nome Fantasia:</b> {data?.informationCompany.fantasia || "Não informado"}</h1>
-                            <h1><b>Natureza Jurídica:</b> {data?.informationCompany.natureza_juridica}</h1>
-                            <h1><b>Regime Tributário:</b> {data?.informationCompany.regime_tributario}</h1>
-                            <h1><b>Funcionários:</b> {data?.informationCompany.quadro_funcionarios}</h1>
-                            <h1><b>Cnae Principal:</b> {data?.informationCompany.cnae_principal}</h1>
-                            <h1><b>Cnae Secundário:</b> {data?.informationCompany.cnae_secundario || "Não informado"}</h1>
-                            <h1>
-                                <b>Data de abertura: </b> 
-                                {data?.informationCompany.data_abertura &&
-                                `${data.informationCompany.data_abertura.slice(6, 8)}/${data.informationCompany.data_abertura.slice(4, 6)}/${data.informationCompany.data_abertura.slice(0, 4)}`}
-                            </h1>
-                            <h1><b>Capital Social:</b> {data?.informationCompany.capital_social || "Não informado"}</h1>
-                            <h1><b>Faturamento:</b> {data?.informationCompany.faturamento || "Não informado"}</h1>
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Razão Social:</b> {data?.informationCompany.razao}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>CNPJ:</b> {data?.informationCompany.cnpj}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Nome Fantasia:</b> {data?.informationCompany.fantasia || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Natureza Jurídica:</b> {data?.informationCompany.natureza_juridica}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Regime Tributário:</b> {data?.informationCompany.regime_tributario}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Funcionários:</b> {data?.informationCompany.quadro_funcionarios}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Cnae Principal:</b> {data?.informationCompany.cnae_principal}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Cnae Secundário:</b> {data?.informationCompany.cnae_secundario || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md">
+                                    <b>Data de abertura: </b> 
+                                    {data?.informationCompany.data_abertura &&
+                                    `${data.informationCompany.data_abertura.slice(6, 8)}/${data.informationCompany.data_abertura.slice(4, 6)}/${data.informationCompany.data_abertura.slice(0, 4)}`}
+                                </h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Capital Social:</b> {data?.informationCompany.capital_social || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Faturamento:</b> {data?.informationCompany.faturamento || "Não informado"}</h1>
+                            </div>
 
                             <h1 className="my-3 text-xl font-bold">Contatos e Endereços</h1>
                             
-                            <h1><b>Email: </b> {data?.informationCompany.email || "Não informado"}</h1>
-                            <h1><b>Telefone 1: </b> {data?.informationCompany.tel_1 || "Não informado"}</h1>
-                            <h1><b>Telefone 2: </b> {data?.informationCompany.tel_2 || "Não informado"}</h1>
-                            <h1><b>Cidade: </b> {data?.informationCompany.log_municipio || "Não informado"}</h1>
-                            <h1><b>CEP: </b> {data?.informationCompany.log_cep || "Não informado"}</h1>
-                            <h1><b>Bairro: </b> {data?.informationCompany.log_bairro || "Não informado"}</h1>
-                            <h1><b>Número: </b> {data?.informationCompany.log_num || "Não informado"}</h1>
-                            <h1><b>Tipo: </b> {data?.informationCompany.log_tipo || "Não informado"}</h1>
-                            <h1><b>Nome: </b> {data?.informationCompany.log_nome || "Não informado"}</h1>
-                            <h1><b>UF: </b> {data?.informationCompany.log_uf || "Não informado"}</h1>
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Email: </b> {data?.informationCompany.email || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Telefone 1: </b> {data?.informationCompany.tel_1 || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Telefone 2: </b> {data?.informationCompany.tel_2 || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Cidade: </b> {data?.informationCompany.log_municipio || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>CEP: </b> {data?.informationCompany.log_cep || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Bairro: </b> {data?.informationCompany.log_bairro || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Número: </b> {data?.informationCompany.log_num || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Tipo: </b> {data?.informationCompany.log_tipo || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>Nome: </b> {data?.informationCompany.log_nome || "Não informado"}</h1>
+                                <h1 className="bg-blue-600/20 p-2 rounded-md"><b>UF: </b> {data?.informationCompany.log_uf || "Não informado"}</h1>
+                            </div>
                         </div>
                     </div>
                 </div>
