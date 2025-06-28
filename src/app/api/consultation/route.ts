@@ -94,17 +94,17 @@ export async function POST(req: NextRequest) {
                 );
             }
 
-            await db.consultation.create({
-                data: {
-                    custom_name,
-                    userId: user.id,
-                    document: responseData.personConsultation?.Result?.[0]?.MatchKeys,
-                    name: responseData.personBasicData?.Result?.[0]?.BasicData.Name,
-                    queryDate: responseData.personConsultation.QueryDate,
-                    queryId: responseData.personConsultation.QueryId,
-                    type_consultation: 'Pessoa',
-                }
-            });
+            // await db.consultation.create({
+            //     data: {
+            //         custom_name,
+            //         userId: user.id,
+            //         document: responseData.personConsultation?.Result?.[0]?.MatchKeys,
+            //         name: responseData.personBasicData?.Result?.[0]?.BasicData.Name,
+            //         queryDate: responseData.personConsultation.QueryDate,
+            //         queryId: responseData.personConsultation.QueryId,
+            //         type_consultation: 'Pessoa',
+            //     }
+            // });
 
             return NextResponse.json(responseData, { status: 200 });
         } else if (doc.length === 14) {
@@ -117,17 +117,17 @@ export async function POST(req: NextRequest) {
                 );
             }
 
-            await db.consultation.create({
-                data: {
-                    custom_name,
-                    userId: user.id,
-                    document: responseData.consultationBusiness?.Result?.[0]?.MatchKeys,
-                    name: responseData.basicDataBusiness.razao,
-                    queryDate: responseData.consultationBusiness.QueryDate,
-                    queryId: responseData.consultationBusiness.QueryId,
-                    type_consultation: 'Empresa',
-                }
-            });
+            // await db.consultation.create({
+            //     data: {
+            //         custom_name,
+            //         userId: user.id,
+            //         document: responseData.consultationBusiness?.Result?.[0]?.MatchKeys,
+            //         name: responseData.basicDataBusiness.razao,
+            //         queryDate: responseData.consultationBusiness.QueryDate,
+            //         queryId: responseData.consultationBusiness.QueryId,
+            //         type_consultation: 'Empresa',
+            //     }
+            // });
 
             return NextResponse.json(responseData, { status: 200 });
         } else {
