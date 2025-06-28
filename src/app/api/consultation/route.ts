@@ -173,6 +173,7 @@ async function handleBusinessRequest(cleanedValue: string) {
     await performBusinessConsultation(cleanedValue);
 
     console.log("DATA: ", responseData.consultationBusiness);
+      return NextResponse.json(responseData.consultationBusiness, { status: 200 });
 
   if (!responseData.consultationBusiness?.Result?.length) {
     return NextResponse.json(
@@ -194,5 +195,5 @@ async function handleBusinessRequest(cleanedValue: string) {
   //   }
   // });
 
-  return NextResponse.json(responseData, { status: 200 });
+//   return NextResponse.json(responseData, { status: 200 });
 }
