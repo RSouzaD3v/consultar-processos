@@ -112,7 +112,7 @@ const formatMensagemEmpresa = (e: any) => `
 const CompanyCard = ({ data }: { data: any }) => (
   <Card className="max-w-3xl mx-auto">
     <CardHeader>
-      <CardTitle className="text-blue-600" >{data.razao}</CardTitle>
+      <CardTitle>{data.razao}</CardTitle>
       <p className="text-sm text-zinc-500">{data.cnpj}</p>
     </CardHeader>
     <CardContent className="space-y-2 text-sm leading-relaxed">
