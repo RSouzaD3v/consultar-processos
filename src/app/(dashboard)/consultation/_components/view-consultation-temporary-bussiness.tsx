@@ -198,7 +198,7 @@ export const ViewConsultationTemporary = ({ data }: { data: DataCompanyTypes | n
                     key={i}
                     className={i % 2 === 0 ? "bg-white" : "bg-blueColor/10"}
                   >
-                    <td className="px-4 py-2 whitespace-nowrap">{val.LastUpdate}</td>
+                    <td className="px-4 py-2 whitespace-nowrap">{val.LastUpdate.slice(0, 10).split("-").reverse().join('-')}</td>
                     <td className="px-4 py-2">{val.MainSubject}</td>
                     <td className="px-4 py-2 whitespace-nowrap">{val.Number}</td>
                     <td className="px-4 py-2 whitespace-nowrap">{val.Status}</td>
