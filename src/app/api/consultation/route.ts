@@ -83,6 +83,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { doc, custom_name } = await req.json();
+    console.log("Payload", { doc: doc, customName: custom_name });
 
     if (!doc || !custom_name) {
       return NextResponse.json(
@@ -95,6 +96,8 @@ export async function POST(req: NextRequest) {
       where: { clerkId: userId }
     });
 
+    console.log("User", user);
+
     if (!user) {
       return NextResponse.json(
         { error: true, message: "Usuário não encontrado." },
@@ -103,6 +106,8 @@ export async function POST(req: NextRequest) {
     }
 
     const cleanedValue = doc.replace(/[^\d]/g, "");
+
+    console.log("Documento limpo: ", cleanedValue);
 
     if (doc.length === 11) {
       return await handlePersonRequest(cleanedValue);
@@ -166,6 +171,8 @@ async function handlePersonRequest(cleanedValue: string) {
 async function handleBusinessRequest(cleanedValue: string) {
   const responseData: { consultationBusiness: ApiReturnDataCompanyTypes, basicDataBusiness: BasicDataCompanyTypes } =
     await performBusinessConsultation(cleanedValue);
+
+    console.log("DATA: ", responseData.consultationBusiness);
 
   if (!responseData.consultationBusiness?.Result?.length) {
     return NextResponse.json(
