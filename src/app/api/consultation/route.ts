@@ -86,12 +86,20 @@ export async function POST(req: NextRequest) {
 
         if (doc.length === 11) {
             const responseData = await performPersonConsultation(cleanedValue);
+
+            if (!responseData.personConsultation?.Result?.length) {
+                return NextResponse.json(
+                    { error: true, message: "Nenhum resultado de processos para este documento" },
+                    { status: 404 }
+                );
+            }
+
             await db.consultation.create({
                 data: {
                     custom_name,
                     userId: user.id,
-                    document: responseData.personConsultation.Result[0].MatchKeys,
-                    name: responseData.personBasicData.Result[0].BasicData.Name,
+                    document: responseData.personConsultation?.Result?.[0]?.MatchKeys,
+                    name: responseData.personBasicData?.Result?.[0]?.BasicData.Name,
                     queryDate: responseData.personConsultation.QueryDate,
                     queryId: responseData.personConsultation.QueryId,
                     type_consultation: 'Pessoa',
@@ -102,11 +110,18 @@ export async function POST(req: NextRequest) {
         } else if (doc.length === 14) {
             const responseData: { consultationBusiness: ApiReturnDataCompanyTypes, basicDataBusiness: BasicDataCompanyTypes } = await performBusinessConsultation(cleanedValue);
 
+            if (!responseData.consultationBusiness?.Result?.length) {
+                return NextResponse.json(
+                    { error: true, message: "Nenhum resultado de processos para este documento" },
+                    { status: 404 }
+                );
+            }
+
             await db.consultation.create({
                 data: {
                     custom_name,
                     userId: user.id,
-                    document: responseData.consultationBusiness.Result[0].MatchKeys,
+                    document: responseData.consultationBusiness?.Result?.[0]?.MatchKeys,
                     name: responseData.basicDataBusiness.razao,
                     queryDate: responseData.consultationBusiness.QueryDate,
                     queryId: responseData.consultationBusiness.QueryId,
