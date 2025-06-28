@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Scale, SearchIcon, Grid } from "lucide-react";
+import { Scale, SearchIcon, Grid, Eye, BarChart2, PenLine } from "lucide-react";
 
 export const menuItems = [
     { 
@@ -12,6 +12,14 @@ export const menuItems = [
         description: null,
         cpf: false,
         cnpj: false
+    },
+    {
+        name: "Dívidas",
+        icon: BarChart2,
+        href: "/dividas-processos",
+        description: "Dashboard interativo de dívidas fiscais federais e processos judiciais",
+        cpf: false,
+        cnpj: true,
     },
     { name: "Processos", 
         icon: Scale, 
@@ -27,6 +35,23 @@ export const menuItems = [
         description: `Aqui você poderá consultar sobre uma empresa específica.`,
         cpf: false,
         cnpj: true
+    },
+    {
+        name: "Monitoramento",
+        icon: Eye,                         
+        href: "/monitoramento-processos", 
+        description: "Módulo de monitoramento de processos em tempo real",
+        cpf: false,
+        cnpj: true,
+    },
+
+    {
+        name: "Abordagem personalizada",
+        icon: PenLine,
+        href: "/abordagem-personalizada",          // mesmo nome da pasta
+        description: "Módulo para gerar aborgadem personalizada com o cliente.",
+        cpf: false,
+        cnpj: true,
     },
 ];
 

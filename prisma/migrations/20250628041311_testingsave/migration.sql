@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Consultation" ALTER COLUMN "queryDate" DROP NOT NULL,
+ALTER COLUMN "queryId" DROP NOT NULL,
+ALTER COLUMN "custom_name" DROP NOT NULL,
+ALTER COLUMN "name" DROP NOT NULL,
+ALTER COLUMN "document" DROP NOT NULL,
+ALTER COLUMN "type_consultation" DROP NOT NULL;

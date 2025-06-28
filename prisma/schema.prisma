@@ -26,12 +26,12 @@ model User {
 
 model Consultation {
   id String @id @default(uuid())
-  queryDate String
-  queryId String
-  type_consultation String
-  custom_name String
-  name String
-  document String
+  queryDate String?
+  queryId String?
+  type_consultation String?
+  custom_name String?
+  name String?
+  document String?
   user User @relation(fields: [userId], references: [id])
   userId String
   createdAt DateTime @default(now())
