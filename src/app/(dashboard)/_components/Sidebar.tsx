@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Scale, SearchIcon, Grid, Eye, BarChart2, PenLine } from "lucide-react";
+import { Scale, SearchIcon, Grid, Eye, BarChart2, PenLine, History } from "lucide-react";
 
 export const menuItems = [
     { 
@@ -27,6 +27,13 @@ export const menuItems = [
         description: `Aqui você poderá ter detalhes de processos judiciais de uma empresa específica ou pessoa.`,
         cpf: true,
         cnpj: true
+    },
+    { name: "Histórico de consultas", 
+        icon: History, 
+        href: "/consultation-history", 
+        description: `Aqui você ver consultas que já foram feitas recentemente ou a longo prazo.`,
+        cpf: false,
+        cnpj: false
     },
     { 
         name: "Consultar Empresas",

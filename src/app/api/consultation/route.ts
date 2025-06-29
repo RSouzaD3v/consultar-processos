@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
                 data: {
                     custom_name,
                     userId: user.id,
-                    document: responseData.personConsultation.Result[0].MatchKeys,
+                    document: cleanedValue,
                     name: responseData.personBasicData.Result[0].BasicData.Name,
                     queryDate: responseData.personConsultation.QueryDate,
                     queryId: responseData.personConsultation.QueryId,
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
                 data: {
                     custom_name,
                     userId: user.id,
-                    document: responseData.consultationBusiness.Result[0].MatchKeys,
+                    document: cleanedValue,
                     name: responseData.basicDataBusiness.razao,
                     queryDate: responseData.consultationBusiness.QueryDate,
                     queryId: responseData.consultationBusiness.QueryId,

@@ -216,13 +216,15 @@ export const ViewConsultationTemporary = ({ data }: { data: DataCompanyTypes | n
           </div>
 
           <div className="flex gap-2 mt-4">
-            <button
-              disabled={loading}
-              onClick={nextPageClick}
-              className="bg-blue-500 disabled:bg-gray-600 p-2 rounded-md text-white"
-            >
-              {loading ? <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div> : "Próxima Página"}
-            </button>
+            {dataReceive.Lawsuits.NextPageId && (
+              <button
+                disabled={loading}
+                onClick={nextPageClick}
+                className="bg-blue-500 disabled:bg-gray-600 p-2 rounded-md text-white"
+              >
+                {loading ? <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div> : "Próxima Página"}
+              </button>
+            )}
 
             <button
               onClick={handleDownloadPDF}
