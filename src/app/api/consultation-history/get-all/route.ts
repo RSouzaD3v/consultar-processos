@@ -28,6 +28,9 @@ export async function GET(req: NextRequest) {
         const getAllConsultation = await db.consultation.findMany({
             where: {
                 userId: user.id
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         });
 

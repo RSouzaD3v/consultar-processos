@@ -59,7 +59,11 @@ export default function ConsultationHistory () {
                             </thead>
                             <tbody>
                                 {consultations.map((item) => (
-                                    <tr key={item.id} className="hover:bg-gray-50">
+                                    <tr
+                                        key={item.id}
+                                        className="hover:bg-blueColor/20 cursor-pointer"
+                                        onClick={() => window.location.href = `/consultation-history/${item.id}`}
+                                    >
                                         {/* <td className="px-4 py-2 border">{item.id}</td> */}
                                         <td className="px-4 py-2 border min-w-[400px]">{item.name}</td>
                                         <td className="px-4 py-2 border">{item.custom_name}</td>
