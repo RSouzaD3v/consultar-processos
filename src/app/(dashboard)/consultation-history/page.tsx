@@ -62,7 +62,7 @@ export default function ConsultationHistory () {
                                     <tr
                                         key={item.id}
                                         className="hover:bg-blueColor/20 cursor-pointer"
-                                        onClick={() => window.location.href = `/consultation-history/${item.id}`}
+                                        onClick={() => window.location.href = `/consultation-history/${item.type_consultation.toLowerCase()}/${item.id}`}
                                     >
                                         {/* <td className="px-4 py-2 border">{item.id}</td> */}
                                         <td className="px-4 py-2 border min-w-[400px]">{item.name}</td>

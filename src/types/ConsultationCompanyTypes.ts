@@ -64,7 +64,7 @@ export interface ProcessesTypes {
     Last365DaysLawsuits: number;
     LastLawsuitDate: string;
     Lawsuits: LawsuitsTypes[];
-    NextPageId: string;
+    NextPageId?: string;
     TotalLawsuits: number;
     TotalLawsuitsAsAuthor: number;
     TotalLawsuitsAsDefendant: number;
