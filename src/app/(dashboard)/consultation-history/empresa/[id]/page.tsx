@@ -28,7 +28,7 @@ interface JsonConsultationTypes {
     MatchKeys: string;
 }
 
-export default function ConsultationHistoryById ({ params }: { params: {id: string} }) {
+export default function ConsultationHistoryById ({ params }: { params: Promise<{id: string}>}) {
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingNext, setLoadingNext] = useState<boolean>(false);
     const [data, setData] = useState<JsonConsultationTypes[] | null>(null);
