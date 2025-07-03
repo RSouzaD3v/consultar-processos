@@ -181,7 +181,7 @@ export default function ConsultationHistoryById ({ params }: { params: Promise<{
             <div className="md:ml-[250px] ml-[50px] p-5">
                 <div className="flex flex-col items-center justify-center h-96">
                     <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-                    <span className="mt-4 text-blue-700 text-lg font-semibold">Carregando dados...</span>
+                    <span className="mt-4 text-blue-700 text-lg font-semibold">Vasculhando dados...</span>
                 </div>
             </div>
         )
