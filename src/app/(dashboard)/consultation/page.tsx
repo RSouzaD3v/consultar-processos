@@ -69,7 +69,7 @@ export default function ConsultationPage() {
       <div className="w-full flex flex-col mt-10 items-center justify-center">
 
         <div className="text-center">
-            <h1 className="text-5xl font-bold">Request New Consultation</h1>
+          <h1 className="text-5xl font-bold">Solicitar Nova Consulta</h1>
           <p className="text-xl">Coloque cpf ou cnpj para verificar históricos de processos judiciais.</p>
         </div>
 

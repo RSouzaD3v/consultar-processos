@@ -135,6 +135,10 @@ export const ViewConsultationTemporaryPerson = ({ data }: { data: DataPersonType
     return (
         <section>
             <hr className="my-5"/>
+                <div className="my-5">
+                    <h1 className="font-bold text-2xl">Cada página retorna no máximo 30 a 500 processos.</h1>
+                    <p>Se precisar ver mais processos, aperte no botão de próxima página</p>
+                </div>
             {dataReceive && (
                 <div>
                     {data && (
