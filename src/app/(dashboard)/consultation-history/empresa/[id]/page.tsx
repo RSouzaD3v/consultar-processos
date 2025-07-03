@@ -41,6 +41,7 @@ export default function ConsultationHistoryById ({ params }: { params: Promise<{
                 const response: ApiResponseConsultationTypes = await axios.get(`/api/consultation-history/${id}`);
 
                 setData(JSON.parse(response.data.consultationByQuery.Result[0].Result));
+                console.log(JSON.parse(response.data.consultationByQuery.Result[0].Result))
                 setLoading(false);
             } catch (e) {
                 console.log(e);
