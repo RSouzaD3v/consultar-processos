@@ -1,9 +1,9 @@
-interface Decision {
+export interface Decision {
     DecisionContent: string;
     DecisionDate: string;
 }
 
-interface Parties {
+export interface Parties {
     Doc: string;
     IsInference: boolean;
     IsPartyActive: boolean;
@@ -16,7 +16,7 @@ interface Parties {
     Type: string;
 }
 
-interface Updates {
+export interface Updates {
     CaptureDate: string;
     Content: string;
     PublishDate: string;

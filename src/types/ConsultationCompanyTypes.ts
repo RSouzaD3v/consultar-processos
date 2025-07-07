@@ -1,4 +1,4 @@
-interface PartiesTypes {
+export interface PartiesTypes {
     Doc: string;
     IsInference: boolean;
     IsPartyActive: boolean;
@@ -9,7 +9,7 @@ interface PartiesTypes {
     Type: string
 }
 
-interface UpdatesTypes {
+export interface UpdatesTypes {
     CaptureDate: string
     Content: string;
     PublishDate: string;

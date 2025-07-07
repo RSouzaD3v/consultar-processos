@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { ViewConsultationTemporary } from "./_components/view-consultation-temporary-bussiness";
-import { ViewConsultationTemporaryPerson } from "./_components/view-consultation-temporary-person";
+import { ViewConsultationBussiness } from "./_components/view-consultation-bussiness";
+import { ViewConsultationPerson } from "./_components/view-consultation-person";
 import { DataCompanyTypes } from "@/types/ConsultationCompanyTypes";
 import { DataPersonTypes } from "@/types/ConsultationPersonTypes";
 
@@ -31,7 +31,7 @@ export default function ConsultationPage() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<DataCompanyTypes | null>(null);
+  const [dataBussiness, setDataBussiness] = useState<DataCompanyTypes | null>(null);
   const [dataPerson, setDataPerson] = useState<DataPersonTypes | null>(null);
 
   const onSubmit = async (data: FormData) => {
@@ -52,10 +52,12 @@ export default function ConsultationPage() {
 
       if (data.doc.length === 14) {
         console.log(result.consultationBusiness?.Result[0]);
-        setData(result.consultationBusiness?.Result[0]);
+        setDataBussiness(result.consultationBusiness?.Result[0]);
+        setDataPerson(null);
       } else if (data.doc.length === 11) {
         console.log(result.personConsultation?.Result[0]);
         setDataPerson(result.personConsultation?.Result[0]);
+        setDataBussiness(null);
       }
     } catch (e) {
       console.log(e);
@@ -110,8 +112,8 @@ export default function ConsultationPage() {
         </form>
       </div>
       <div className="flex flex-col gap-3 mt-8">
-        {data && <ViewConsultationTemporary data={data} />}
-        {dataPerson && <ViewConsultationTemporaryPerson data={dataPerson} />}
+        {(dataBussiness && !dataPerson) && <ViewConsultationBussiness data={dataBussiness} />}
+        {(dataPerson && !dataBussiness) && <ViewConsultationPerson data={dataPerson} />}
       </div>
     </div>
   );

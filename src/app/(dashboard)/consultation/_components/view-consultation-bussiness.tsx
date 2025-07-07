@@ -5,7 +5,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { DataCompanyTypes } from "@/types/ConsultationCompanyTypes";
 
-export const ViewConsultationTemporary = ({ data }: { data: DataCompanyTypes | null }) => {
+export const ViewConsultationBussiness = ({ data }: { data: DataCompanyTypes | null }) => {
   const [dataReceive, setDataReceive] = useState(data);
   const [loading, setLoading] = useState<boolean>(false);
 

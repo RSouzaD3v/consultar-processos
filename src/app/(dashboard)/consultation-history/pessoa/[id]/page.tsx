@@ -191,143 +191,143 @@ export default function ConsultationHistoryById ({ params }: { params: Promise<{
     return (
         <div className="md:ml-[250px] ml-[50px] p-5">
                 <div className="flex flex-col gap-3 mt-8">
-<section>
-  {data && (
-    <div>
-      {/* GRID DE CARDS COM MÉTRICAS */}
-      <div className="grid md:grid-cols-4 md:grid-rows-2 gap-5">
-        <div className="bg-secondColor text-white p-2 rounded-md">
-          <h1>Total Processos:</h1>
-          <h1 className="text-3xl font-bold">
-            {data[0]?.Processes?.TotalLawsuits ?? "Não informado"}
-          </h1>
-        </div>
-        <div className="bg-secondColor text-white p-2 rounded-md">
-          <h1>Processos como Autor:</h1>
-          <h1 className="text-3xl font-bold">
-            {data[0]?.Processes?.TotalLawsuitsAsAuthor ?? "Não informado"}
-          </h1>
-        </div>
-        <div className="bg-secondColor text-white p-2 rounded-md">
-          <h1>Processos como Defensor:</h1>
-          <h1 className="text-3xl font-bold">
-            {data[0]?.Processes?.TotalLawsuitsAsDefendant ?? "Não informado"}
-          </h1>
-        </div>
-        <div className="bg-secondColor text-white p-2 rounded-md">
-          <h1>Últimos 180 dias:</h1>
-          <h1 className="text-3xl font-bold">
-            {data[0]?.Processes?.Last180DaysLawsuits ?? "Não informado"}
-          </h1>
-        </div>
-        <div className="bg-secondColor text-white p-2 rounded-md">
-          <h1>Últimos 30 dias:</h1>
-          <h1 className="text-3xl font-bold">
-            {data[0]?.Processes?.Last30DaysLawsuits ?? "Não informado"}
-          </h1>
-        </div>
-        <div className="bg-secondColor text-white p-2 rounded-md">
-          <h1>Últimos 365 dias:</h1>
-          <h1 className="text-3xl font-bold">
-            {data[0]?.Processes?.Last365DaysLawsuits ?? "Não informado"}
-          </h1>
-        </div>
-        <div className="bg-secondColor text-white p-2 rounded-md">
-          <h1>Últimos 90 dias:</h1>
-          <h1 className="text-3xl font-bold">
-            {data[0]?.Processes?.Last90DaysLawsuits ?? "Não informado"}
-          </h1>
-        </div>
-      </div>
-
-      {/* TABELA DE PROCESSOS */}
-      <div className="overflow-x-auto rounded-lg border my-5">
-        <table className="min-w-[1000px] w-full text-sm text-left border-collapse">
-          <thead className="bg-secondColor text-white">
-            <tr>
-              <th className="px-4 py-2 whitespace-nowrap">Última Atualização</th>
-              <th className="px-4 py-2 min-w-[300px]">Assunto Principal</th>
-              <th className="px-4 py-2 whitespace-nowrap">Nº do Processo</th>
-              <th className="px-4 py-2 whitespace-nowrap">Status</th>
-              <th className="px-4 py-2 whitespace-nowrap">Nome do Tribunal</th>
-              <th className="px-4 py-2 whitespace-nowrap">Nível Tribunal</th>
-              <th className="px-4 py-2 whitespace-nowrap">Tipo Tribunal</th>
-              <th className="px-4 py-2 min-w-[300px]">Corpo Julgador</th>
-              <th className="px-4 py-2 whitespace-nowrap">Estado</th>
-              <th className="px-4 py-2 min-w-[200px]">Tipo</th>
-              <th className="px-4 py-2">Valor</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data[0]?.Processes?.Lawsuits?.length > 0 ? (
-              data[0].Processes.Lawsuits.map((val, i) => (
-                <tr
-                  key={i}
-                  className={i % 2 === 0 ? "bg-white" : "bg-blueColor/10"}
-                >
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    {val?.LastUpdate
-                      ? val.LastUpdate.slice(0, 10).split("-").reverse().join('-')
-                      : "Não informado"}
-                  </td>
-                  <td className="px-4 py-2">{val?.MainSubject ?? "Não informado"}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{val?.Number ?? "Não informado"}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{val?.Status ?? "Não informado"}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{val?.CourtName ?? "Não informado"}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{val?.CourtLevel ?? "Não informado"}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{val?.CourtType ?? "Não informado"}</td>
-                  <td className="px-4 py-2">{val?.JudgingBody ?? "Não informado"}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{val?.State ?? "Não informado"}</td>
-                  <td className="px-4 py-2">{val?.Type ?? "Não informado"}</td>
-                  <td className="px-4 py-2 min-w-[120px]">
-                    {val?.Value != null ? `R$${val.Value.toFixed(2)}` : "Não informado"}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={11} className="text-center py-4">
-                  Nenhum processo encontrado.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* BOTÕES */}
-      <div className="flex gap-2 mt-4">
-        {data[0]?.Processes?.NextPageId && (
-          <button
-            disabled={loadingNext}
-            onClick={nextPageClick}
-            className="bg-blue-500 disabled:bg-gray-600 p-2 rounded-md text-white"
-          >
-            {loadingNext ? (
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
-            ) : (
-              "Próxima Página"
-            )}
-          </button>
-        )}
-
-        <button
-          onClick={handleDownloadPDF}
-          className="bg-green-500 p-2 rounded-md text-white"
-        >
-          Baixar PDF
-        </button>
-
-        <button
-          onClick={handleDownloadExcel}
-          className="bg-yellow-500 p-2 rounded-md text-white"
-        >
-          Baixar Excel
-        </button>
-      </div>
-    </div>
-  )}
-</section>
+                  <section>
+                    {data && (
+                      <div>
+                        {/* GRID DE CARDS COM MÉTRICAS */}
+                        <div className="grid md:grid-cols-4 md:grid-rows-2 gap-5">
+                          <div className="bg-secondColor text-white p-2 rounded-md">
+                            <h1>Total Processos:</h1>
+                            <h1 className="text-3xl font-bold">
+                              {data[0]?.Processes?.TotalLawsuits ?? "Não informado"}
+                            </h1>
+                          </div>
+                          <div className="bg-secondColor text-white p-2 rounded-md">
+                            <h1>Processos como Autor:</h1>
+                            <h1 className="text-3xl font-bold">
+                              {data[0]?.Processes?.TotalLawsuitsAsAuthor ?? "Não informado"}
+                            </h1>
+                          </div>
+                          <div className="bg-secondColor text-white p-2 rounded-md">
+                            <h1>Processos como Defensor:</h1>
+                            <h1 className="text-3xl font-bold">
+                              {data[0]?.Processes?.TotalLawsuitsAsDefendant ?? "Não informado"}
+                            </h1>
+                          </div>
+                          <div className="bg-secondColor text-white p-2 rounded-md">
+                            <h1>Últimos 180 dias:</h1>
+                            <h1 className="text-3xl font-bold">
+                              {data[0]?.Processes?.Last180DaysLawsuits ?? "Não informado"}
+                            </h1>
+                          </div>
+                          <div className="bg-secondColor text-white p-2 rounded-md">
+                            <h1>Últimos 30 dias:</h1>
+                            <h1 className="text-3xl font-bold">
+                              {data[0]?.Processes?.Last30DaysLawsuits ?? "Não informado"}
+                            </h1>
+                          </div>
+                          <div className="bg-secondColor text-white p-2 rounded-md">
+                            <h1>Últimos 365 dias:</h1>
+                            <h1 className="text-3xl font-bold">
+                              {data[0]?.Processes?.Last365DaysLawsuits ?? "Não informado"}
+                            </h1>
+                          </div>
+                          <div className="bg-secondColor text-white p-2 rounded-md">
+                            <h1>Últimos 90 dias:</h1>
+                            <h1 className="text-3xl font-bold">
+                              {data[0]?.Processes?.Last90DaysLawsuits ?? "Não informado"}
+                            </h1>
+                          </div>
+                        </div>
+                    
+                        {/* TABELA DE PROCESSOS */}
+                        <div className="overflow-x-auto rounded-lg border my-5">
+                          <table className="min-w-[1000px] w-full text-sm text-left border-collapse">
+                            <thead className="bg-secondColor text-white">
+                              <tr>
+                                <th className="px-4 py-2 whitespace-nowrap">Última Atualização</th>
+                                <th className="px-4 py-2 min-w-[300px]">Assunto Principal</th>
+                                <th className="px-4 py-2 whitespace-nowrap">Nº do Processo</th>
+                                <th className="px-4 py-2 whitespace-nowrap">Status</th>
+                                <th className="px-4 py-2 whitespace-nowrap">Nome do Tribunal</th>
+                                <th className="px-4 py-2 whitespace-nowrap">Nível Tribunal</th>
+                                <th className="px-4 py-2 whitespace-nowrap">Tipo Tribunal</th>
+                                <th className="px-4 py-2 min-w-[300px]">Corpo Julgador</th>
+                                <th className="px-4 py-2 whitespace-nowrap">Estado</th>
+                                <th className="px-4 py-2 min-w-[200px]">Tipo</th>
+                                <th className="px-4 py-2">Valor</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {data[0]?.Processes?.Lawsuits?.length > 0 ? (
+                                data[0].Processes.Lawsuits.map((val, i) => (
+                                  <tr
+                                    key={i}
+                                    className={i % 2 === 0 ? "bg-white" : "bg-blueColor/10"}
+                                  >
+                                    <td className="px-4 py-2 whitespace-nowrap">
+                                      {val?.LastUpdate
+                                        ? val.LastUpdate.slice(0, 10).split("-").reverse().join('-')
+                                        : "Não informado"}
+                                    </td>
+                                    <td className="px-4 py-2">{val?.MainSubject ?? "Não informado"}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{val?.Number ?? "Não informado"}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{val?.Status ?? "Não informado"}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{val?.CourtName ?? "Não informado"}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{val?.CourtLevel ?? "Não informado"}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{val?.CourtType ?? "Não informado"}</td>
+                                    <td className="px-4 py-2">{val?.JudgingBody ?? "Não informado"}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{val?.State ?? "Não informado"}</td>
+                                    <td className="px-4 py-2">{val?.Type ?? "Não informado"}</td>
+                                    <td className="px-4 py-2 min-w-[120px]">
+                                      {val?.Value != null ? `R$${val.Value.toFixed(2)}` : "Não informado"}
+                                    </td>
+                                  </tr>
+                                ))
+                              ) : (
+                                <tr>
+                                  <td colSpan={11} className="text-center py-4">
+                                    Nenhum processo encontrado.
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                            
+                        {/* BOTÕES */}
+                        <div className="flex gap-2 mt-4">
+                          {data[0]?.Processes?.NextPageId && (
+                            <button
+                              disabled={loadingNext}
+                              onClick={nextPageClick}
+                              className="bg-blue-500 disabled:bg-gray-600 p-2 rounded-md text-white"
+                            >
+                              {loadingNext ? (
+                                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+                              ) : (
+                                "Próxima Página"
+                              )}
+                            </button>
+                          )}
+                  
+                          <button
+                            onClick={handleDownloadPDF}
+                            className="bg-green-500 p-2 rounded-md text-white"
+                          >
+                            Baixar PDF
+                          </button>
+                        
+                          <button
+                            onClick={handleDownloadExcel}
+                            className="bg-yellow-500 p-2 rounded-md text-white"
+                          >
+                            Baixar Excel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </section>
 
                 </div>
         </div>
