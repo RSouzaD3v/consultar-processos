@@ -9,6 +9,11 @@ export interface PartiesTypes {
     Type: string
 }
 
+export interface DecisionTypes {
+    DecisionContent: string;
+    DecisionDate: string;
+}
+
 export interface UpdatesTypes {
     CaptureDate: string
     Content: string;
@@ -23,7 +28,7 @@ export interface LawsuitsTypes {
     CourtLevel: string | number;
     CourtName: string;
     CourtType: string;
-    Decisions: [];
+    Decisions: DecisionTypes[];
     InferredBroadCNJSubjectName: string;
     InferredBroadCNJSubjectNumber: number;
     InferredCNJProcedureTypeName: string;

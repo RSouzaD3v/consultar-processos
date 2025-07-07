@@ -3,9 +3,7 @@
 import { ProcessesTypes } from "@/types/ConsultationPersonTypes";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { jsPDF } from "jspdf";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
+import { ViewConsultationPerson } from "@/app/(dashboard)/consultation/_components/view-consultation-person";
 
 interface ResultApiTypes {
     Result: string
@@ -30,7 +28,6 @@ interface JsonConsultationTypes {
 
 export default function ConsultationHistoryById ({ params }: { params: Promise<{id: string}>}) {
     const [loading, setLoading] = useState<boolean>(true);
-    const [loadingNext, setLoadingNext] = useState<boolean>(false);
     const [data, setData] = useState<JsonConsultationTypes[] | null>(null);
 
     useEffect(() => {
@@ -53,129 +50,6 @@ export default function ConsultationHistoryById ({ params }: { params: Promise<{
 
         fetchConsultation();
     }, [params]);
-
-          const nextPageClick = async () => {
-            if (data) {
-              setLoadingNext(true);
-              try {
-                const response = await fetch("/api/consultation/next-page", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    nextPageId: data[0].Processes.NextPageId,
-                    doc: data[0].MatchKeys
-                  })
-                });
-        
-                const dataJson = await response.json();
-                setData(dataJson.nextPage.Result[0]);
-              } catch (e) {
-                console.log(e);
-                setLoadingNext(false);
-            } finally {
-                setLoadingNext(false);
-              }
-            }
-          };
-        
-          const handleDownloadPDF = () => {
-            if (!data) return;
-        
-            const doc = new jsPDF();
-            const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
-            const marginLeft = 10;
-            const maxWidth = pageWidth - 20;
-            let y = 10;
-            const safetyMargin = 30;
-        
-            const checkPageBreak = (requiredSpace: number) => {
-              if (y + requiredSpace > pageHeight - safetyMargin) {
-                doc.addPage();
-                y = 10;
-              }
-            };
-        
-            doc.setFont("helvetica", "bold");
-            doc.text("Relatório de Consultas", marginLeft, y);
-            y += 10;
-            doc.setFont("helvetica", "normal");
-        
-            if (data) {
-              const infoTexts = [
-                `Total Processos: ${data[0].Processes.TotalLawsuits}`,
-                `Processos como Autor: ${data[0].Processes.TotalLawsuitsAsAuthor}`,
-                `Processos como Defensor: ${data[0].Processes.TotalLawsuitsAsDefendant}`,
-                `Últimos 180 dias: ${data[0].Processes.Last180DaysLawsuits}`,
-                `Últimos 30 dias: ${data[0].Processes.Last30DaysLawsuits}`,
-                `Últimos 365 dias: ${data[0].Processes.Last365DaysLawsuits}`,
-                `Últimos 90 dias: ${data[0].Processes.Last90DaysLawsuits}`
-              ];
-        
-              infoTexts.forEach(text => {
-                checkPageBreak(10);
-                doc.text(text, marginLeft, y);
-                y += 10;
-              });
-            }
-        
-            checkPageBreak(10);
-            doc.text("Os processos da página:", marginLeft, y);
-            y += 10;
-        
-            data[0].Processes.Lawsuits.forEach((val, i) => {
-              checkPageBreak(50);
-              doc.setFont("helvetica", "bold");
-              doc.text(`${i + 1}. ${val.Number}`, marginLeft, y);
-              y += 8;
-              doc.setFont("helvetica", "normal");
-        
-              const processData = [
-                { label: "Assunto", value: val.MainSubject },
-                { label: "Status", value: `(${val.Status})` },
-                { label: "Nome do Tribunal", value: val.CourtName },
-                { label: "Tipo de Tribunal", value: val.CourtType },
-                { label: "Nível do Tribunal", value: val.CourtLevel },
-                { label: "Corpo Julgador", value: val.JudgingBody },
-                { label: "Estado", value: val.State }
-              ];
-        
-              processData.forEach(({ label, value }) => {
-                const lines = doc.splitTextToSize(`${label}: ${value}`, maxWidth);
-                checkPageBreak(lines.length * 6);
-                doc.text(lines, marginLeft + 10, y);
-                y += lines.length * 6;
-              });
-        
-              y += 5;
-            });
-        
-            doc.save("relatorio-consulta.pdf");
-          };
-        
-          const handleDownloadExcel = () => {
-            if (!data) return;
-            const dataForExcel = data[0].Processes.Lawsuits.map((val) => ({
-              "Nº Processo": val.Number,
-              "Assunto Principal": val.MainSubject,
-              "Status": val.Status,
-              "Última Atualização": val.LastUpdate,
-              "Nome do tribunal": val.CourtName,
-              "Tipo do tribunal": val.CourtType,
-              "Nível do tribunal": val.CourtLevel,
-              "Corpo Julgador": val.JudgingBody,
-              "Estado": val.State,
-              "Total de Processos": data[0]?.Processes.TotalLawsuits,
-              "Total de Processos como Autor": data[0]?.Processes.TotalLawsuitsAsAuthor,
-              "Total de Processos como Defensor": data[0]?.Processes.TotalLawsuitsAsDefendant,
-              "Total de Processos como Outros": data[0]?.Processes.TotalLawsuitsAsOther
-            }));
-            const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Consultas");
-            const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-            const dataE = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8" });
-            saveAs(dataE, "relatorio-consulta.xlsx");
-          };
 
     if(loading) {
         return (
@@ -240,91 +114,7 @@ export default function ConsultationHistoryById ({ params }: { params: Promise<{
                           </div>
                         </div>
                     
-                        {/* TABELA DE PROCESSOS */}
-                        <div className="overflow-x-auto rounded-lg border my-5">
-                          <table className="min-w-[1000px] w-full text-sm text-left border-collapse">
-                            <thead className="bg-secondColor text-white">
-                              <tr>
-                                <th className="px-4 py-2 whitespace-nowrap">Última Atualização</th>
-                                <th className="px-4 py-2 min-w-[300px]">Assunto Principal</th>
-                                <th className="px-4 py-2 whitespace-nowrap">Nº do Processo</th>
-                                <th className="px-4 py-2 whitespace-nowrap">Status</th>
-                                <th className="px-4 py-2 whitespace-nowrap">Nome do Tribunal</th>
-                                <th className="px-4 py-2 whitespace-nowrap">Nível Tribunal</th>
-                                <th className="px-4 py-2 whitespace-nowrap">Tipo Tribunal</th>
-                                <th className="px-4 py-2 min-w-[300px]">Corpo Julgador</th>
-                                <th className="px-4 py-2 whitespace-nowrap">Estado</th>
-                                <th className="px-4 py-2 min-w-[200px]">Tipo</th>
-                                <th className="px-4 py-2">Valor</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {data[0]?.Processes?.Lawsuits?.length > 0 ? (
-                                data[0].Processes.Lawsuits.map((val, i) => (
-                                  <tr
-                                    key={i}
-                                    className={i % 2 === 0 ? "bg-white" : "bg-blueColor/10"}
-                                  >
-                                    <td className="px-4 py-2 whitespace-nowrap">
-                                      {val?.LastUpdate
-                                        ? val.LastUpdate.slice(0, 10).split("-").reverse().join('-')
-                                        : "Não informado"}
-                                    </td>
-                                    <td className="px-4 py-2">{val?.MainSubject ?? "Não informado"}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap">{val?.Number ?? "Não informado"}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap">{val?.Status ?? "Não informado"}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap">{val?.CourtName ?? "Não informado"}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap">{val?.CourtLevel ?? "Não informado"}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap">{val?.CourtType ?? "Não informado"}</td>
-                                    <td className="px-4 py-2">{val?.JudgingBody ?? "Não informado"}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap">{val?.State ?? "Não informado"}</td>
-                                    <td className="px-4 py-2">{val?.Type ?? "Não informado"}</td>
-                                    <td className="px-4 py-2 min-w-[120px]">
-                                      {val?.Value != null ? `R$${val.Value.toFixed(2)}` : "Não informado"}
-                                    </td>
-                                  </tr>
-                                ))
-                              ) : (
-                                <tr>
-                                  <td colSpan={11} className="text-center py-4">
-                                    Nenhum processo encontrado.
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-                            
-                        {/* BOTÕES */}
-                        <div className="flex gap-2 mt-4">
-                          {data[0]?.Processes?.NextPageId && (
-                            <button
-                              disabled={loadingNext}
-                              onClick={nextPageClick}
-                              className="bg-blue-500 disabled:bg-gray-600 p-2 rounded-md text-white"
-                            >
-                              {loadingNext ? (
-                                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
-                              ) : (
-                                "Próxima Página"
-                              )}
-                            </button>
-                          )}
-                  
-                          <button
-                            onClick={handleDownloadPDF}
-                            className="bg-green-500 p-2 rounded-md text-white"
-                          >
-                            Baixar PDF
-                          </button>
-                        
-                          <button
-                            onClick={handleDownloadExcel}
-                            className="bg-yellow-500 p-2 rounded-md text-white"
-                          >
-                            Baixar Excel
-                          </button>
-                        </div>
+                        <ViewConsultationPerson data={data[0]} />
                       </div>
                     )}
                   </section>

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { ViewConsultationBussiness } from "./_components/view-consultation-bussiness";
+import { ViewConsultationBusiness } from "./_components/view-consultation-bussiness";
 import { ViewConsultationPerson } from "./_components/view-consultation-person";
 import { DataCompanyTypes } from "@/types/ConsultationCompanyTypes";
 import { DataPersonTypes } from "@/types/ConsultationPersonTypes";
@@ -112,7 +112,7 @@ export default function ConsultationPage() {
         </form>
       </div>
       <div className="flex flex-col gap-3 mt-8">
-        {(dataBussiness && !dataPerson) && <ViewConsultationBussiness data={dataBussiness} />}
+        {(dataBussiness && !dataPerson) && <ViewConsultationBusiness data={dataBussiness} />}
         {(dataPerson && !dataBussiness) && <ViewConsultationPerson data={dataPerson} />}
       </div>
     </div>
